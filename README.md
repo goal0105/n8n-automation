@@ -12,42 +12,35 @@ Mistral OCR, Google OCR, Create News Narration.
 
 ### Project Structure
 
+- Radio News
+- Mistral OCR
+- Google OCR
+- Groq Translate
+- Groq Transcript
+- Generate Video
+- Redering Video
+- Queued Video
+
 #### Radio News
-
-#### Mistral OCR
-
-#### Google OCR
-
-#### Groq Translate
-
-#### Groq Transcript
-
-#### Generate Video
-
-#### Redering Video
-
-#### Queued Video
-
-##### Radio News
 
 Send radio news every 15 minutes except Friday, Saturday.
 
-##### Mistral OCR
+#### Mistral OCR
 
 Extract text from images and PDF using Mistral OCR.
 
-##### Google OCR
+#### Google OCR
 
 Extract text from images and PDF using Google OCR.
 
-##### Groq Translate
+#### Groq Translate
 
 Translate text using Groq Translate.
 
-##### Groq Transcript
+#### Groq Transcript
 
 Transcriipt audio using Groq Transcript.
 
-##### Generate Video
+#### Generate Video
 
 Generate video using ShotStack SDK.
