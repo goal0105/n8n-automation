@@ -2,7 +2,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-This project is for **JERUSALEM POST LTD** Company automation.
+This project is for <h1>JERUSALEM POST LTD</h1> Company automation.
 
 This includes various n8n flows such as <b>Radio news</b>, <b>Groq traslation</b>, <b>Groq transcript</b>,
 <b>Mistral OCR</b>, <b>Google OCR</b>, <b>Create News Narration</b>.
