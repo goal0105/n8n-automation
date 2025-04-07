@@ -12,14 +12,12 @@ Mistral OCR, Google OCR, Create News Narration.
 
 ### Project Structure
 
-- Radio News(#Radio News)
-- Mistral OCR(#Mistral OCR)
-- Google OCR(#Google OCR)
-- Groq Translate(#Groq Translate)
-- Groq Transcript(#Groq Transcript)
-- Generate Video(#Generate Video)
-- Redering Video
-- Queued Video
+- [Radio News](#Radio News)
+- [Mistral OCR](#Mistral OCR)
+- [Google OCR](#Google OCR)
+- [Groq Translate](#Groq Translate)
+- [Groq Transcript](#Groq Transcript)
+- [Generate Video](#Generate Video)
 
 ### Credential
 
