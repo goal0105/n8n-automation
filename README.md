@@ -1,5 +1,6 @@
 # N8N Automation
 
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 This project is for JERUSALEM POST LTD Company automation.
 
 This includes various n8n flows such as radio news, Groq traslation, Groq transcript,
@@ -110,3 +111,5 @@ Transcriipt audio using Groq Transcript.
 #### Generate Video
 
 Generate video using ShotStack SDK.
+
+[product-screenshot]: https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png
