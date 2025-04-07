@@ -32,7 +32,7 @@ Mistral OCR, Google OCR, Create News Narration.
   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
   ```
 
-  - Google Service Account :
+- Google Service Account
 
   ```sh
   type: service_account,
