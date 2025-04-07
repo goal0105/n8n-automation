@@ -1,4 +1,4 @@
-# N8N-automation
+# N8N Automation
 
 This project is for JERUSALEM POST LTD Company automation.
 
@@ -12,7 +12,7 @@ Mistral OCR, Google OCR, Create News Narration.
 
 ### Project Structure
 
-- [N8N-automation](#n8n-automation)
+- [N8N Automation](#n8n-automation)
   - [Requirements](#requirements)
   - [Project Structure](#project-structure)
   - [Credential](#credential)
