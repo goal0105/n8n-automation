@@ -82,8 +82,8 @@ universe_domain: googleapis.com
 - ShotStack
 
 ```
-  **Sandbox**(jag2pn7hng): T0mZ85JFMS87u5WYArIGSwQymiCArn511BWJjCjg
-  **Production**(Mz1eil9p3p) : 1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf
+  <b>Sandbox<b>(jag2pn7hng): T0mZ85JFMS87u5WYArIGSwQymiCArn511BWJjCjg
+  <b>Production<b>(Mz1eil9p3p) : 1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf
 ```
 
 ### Flow
