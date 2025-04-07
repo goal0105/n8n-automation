@@ -1,10 +1,11 @@
 # N8N Automation
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
-This project is for JERUSALEM POST LTD Company automation.
 
-This includes various n8n flows such as radio news, Groq traslation, Groq transcript,
-Mistral OCR, Google OCR, Create News Narration.
+This project is for **JERUSALEM POST LTD** Company automation.
+
+This includes various n8n flows such as <b>Radio news</b>, <b>Groq traslation</b>, <b>Groq transcript</b>,
+<b>Mistral OCR</b>, <b>Google OCR</b>, <b>Create News Narration</b>.
 
 ### Requirements
 
