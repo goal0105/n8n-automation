@@ -1,0 +1,82 @@
+{
+  "name": "Send Integrate Article GPT Process Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "send-gpt-process-flow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        -20
+      ],
+      "id": "68bc8203-86da-4296-91ce-4f5265738da9",
+      "name": "Webhook",
+      "webhookId": "e4f3980f-199b-4aed-9b11-a0046483abc2"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{ $vars.integrate_article_gpt_process_flow_id}} ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        -20
+      ],
+      "id": "b902d5c9-ff7c-4739-a1e9-799244101ddd",
+      "name": "Send GPT Process Flow",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send GPT Process Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ba391068-f499-4271-9cd6-df13c739ca18",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "rQaoVHDrchmtz8zX",
+  "tags": []
+}

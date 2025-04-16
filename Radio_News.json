@@ -1,0 +1,77 @@
+{
+  "name": "Radio News",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/15 7-19 * * 0-4"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        -200
+      ],
+      "id": "79a35b18-ecc3-4407-9a27-2f3f1c35fa26",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "https://newapp.connectop.co.il/api/users/972546570979/send/1743398897891",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-ACCESS-TOKEN",
+              "value": "1355771.2Tt6Kbw179B9RPCQ0FEtjymM1TcbfkUgoJS3I7Esr6Oe"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        -200
+      ],
+      "id": "c61e3ae6-da81-42a8-a5e7-442f13989ae2",
+      "name": "Send News"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3a4674f0-85d7-4def-8228-9924367be464",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "gIzAcZv4tsU3rH1S",
+  "tags": []
+}

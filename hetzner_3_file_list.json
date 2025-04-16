@@ -1,0 +1,191 @@
+{
+  "name": "hetzner 3 file list",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "timezone": "Etc/GMT-3"
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "b4a43344-12ea-44a0-9502-2e174ef9acc9",
+      "name": "Current Date Time"
+    },
+    {
+      "parameters": {
+        "jsCode": "import { S3Client, ListObjectsV2Command } from \"@aws-sdk/client-s3\";\n\n// Configure S3 client\nconst s3 = new S3Client({\n  region: \"fsn1\",\n  endpoint: \"https://fsn1.your-objectstorage.com\", \n  credentials: {\n    accessKeyId: \"$('AcessKey').first().json.AcessKey\", \n    secretAccessKey: \"$input.first().json.SecretKey\",     \n  },\n});\n\n// Function to parse timestamp from filename\nfunction parseTimestamp(filename) {\n  const regex = /^(\\d{4}-\\d{2}-\\d{2})--(\\d{2})-(\\d{2})\\.mp3$/;\n  const match = filename.match(regex);\n  if (match) {\n    const [_, datePart, hour, minute] = match;\n    const timestamp = new Date(`${datePart}T${hour}:${minute}:00.00Z`);\n\n    return  timestamp;\n  }\n  return null;\n}\n\n// Get files closest to the current time\nfunction getClosestFiles(bucketName, prefix, numFiles = 3) {\n\n  let ContinuationToken = undefined;\n\n  try {\n    let data;\n    do {\n        data = await s3.send(new ListObjectsV2Command({\n        Bucket: bucketName,\n        Prefix: prefix,\n        ContinuationToken,\n      }));\n\n      // totalFiles += data.KeyCount || 0;\n      ContinuationToken = data.IsTruncated ? data.NextContinuationToken : null;\n\n    } while (ContinuationToken);\n  \n    if (!data.Contents || data.Contents.length === 0) {\n      console.log(\"No files found.\");\n      return [];\n    }\n\n    const currentTime = $('Current Date Time').first().json.currentDate;\n    // console.log(\"currentTime:\", currentTime);\n\n\n    // Map files to their timestamps\n    const filesWithTimes = data.Contents\n      .map(item => {\n        const timestamp = parseTimestamp(item.Key.split('/').pop());\n        return timestamp ? { key: item.Key, timestamp } : null;\n      })\n      .filter(Boolean);\n\n    // Sort by closest timestamp to current time\n    filesWithTimes.sort((a, b) => \n      Math.abs(a.timestamp - currentTime) - Math.abs(b.timestamp - currentTime)\n    );\n\n    // Select closest files\n    const closestFiles = filesWithTimes.slice(0, numFiles);\n    const directory = \"https://fsn1.your-objectstorage.com/jpost/\";\n\n    // const resultJSON = {current : $('Current Date Time').first().json.currentDate};\n    const resultJSON = {};\n    closestFiles.forEach((file, index) => {\n      resultJSON[`audio${index + 1}`] = `${directory}${file.key}`;\n    });\n\n     return resultJSON;\n    \n  } catch (error) {\n    // console.error(\"Error:\", error);\n    return [];\n  }\n}\n\n// return audio URL\nreturn {json :  getClosestFiles(\"jpost\", \"radio-103fm/audio/\")} ;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        0
+      ],
+      "id": "15d001a7-486d-43f1-ae6c-c6cb8e452f80",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3097d495-e1e1-4ce6-b354-30764ae29c40",
+              "name": "AcessKey",
+              "value": "KC8VDWT5OVC0NS1Q4754",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "30134dfc-f536-49ac-ade8-880381d8b0d9",
+      "name": "AcessKey"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1b9e5db2-8c80-45ef-80ce-9afb636d2f3e",
+              "name": "SecretKey",
+              "value": "yAad5AkIA6396yiBGwoVYKRNKTBQiHDV7CYg9quR",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        140,
+        0
+      ],
+      "id": "18a2e0fd-b57c-4f00-986f-51b176f2fb81",
+      "name": "SecretKey"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        80
+      ],
+      "id": "a1af33b0-6169-4284-85da-494159634de1",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "path": "get-three-files",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -540,
+        -100
+      ],
+      "id": "de408528-2fbb-4cd7-9a9f-b73da2d8210a",
+      "name": "Get-Three-Files Request",
+      "webhookId": "663561fe-e869-4178-be22-d80515cdd5d8"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        580,
+        -80
+      ],
+      "id": "f0b4141c-a81c-42d9-a3cf-08567c7c8f47",
+      "name": "Return 3 Audio File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Current Date Time": {
+      "main": [
+        [
+          {
+            "node": "AcessKey",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        []
+      ]
+    },
+    "AcessKey": {
+      "main": [
+        [
+          {
+            "node": "SecretKey",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SecretKey": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Current Date Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get-Three-Files Request": {
+      "main": [
+        [
+          {
+            "node": "Current Date Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e06eee20-04c4-4777-bdd4-2678c567c825",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "yse5qX9JFUCvaQJW",
+  "tags": []
+}

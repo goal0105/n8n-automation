@@ -1,0 +1,110 @@
+{
+  "name": "Queued Video",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "queuded-video",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        60
+      ],
+      "id": "d036f117-0035-4f0c-9270-8d2592bb6c15",
+      "name": "Queued Hook",
+      "webhookId": "76ca112e-bc75-4ea9-accb-265c59bdc879"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.shotstack.io/v1/render",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        60
+      ],
+      "id": "7807a641-c91a-4c70-88ce-22d00382d6e9",
+      "name": "Shotstack Queued Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={\n\"success\" : {{ $json.success}},\n\"queued_id\" : \"{{ $json.response.id }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        60
+      ],
+      "id": "a88d598b-88b1-4b0f-b762-3af9cb556360",
+      "name": "Return Queded Id"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Queued Hook": {
+      "main": [
+        [
+          {
+            "node": "Shotstack Queued Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shotstack Queued Request": {
+      "main": [
+        [
+          {
+            "node": "Return Queded Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1a5b0236-202a-44fe-b7c6-43fe2b1b674f",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "xQcufVVCIaxcYLFU",
+  "tags": []
+}

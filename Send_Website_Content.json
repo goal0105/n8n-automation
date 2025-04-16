@@ -1,0 +1,655 @@
+{
+  "name": "Send Website Content",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "3b8d348f-c419-4af0-9cf4-486fa9b09637",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        4740,
+        440
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "b8f62f83-a4b2-4261-9a3d-4f25387f4ec2",
+      "name": "Clean Content",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        4040,
+        640
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1pfhXsGN_VIts-2xhkX-EC6cn4u-_Zx9k9uL6mQ2G6tI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "input",
+          "mode": "name"
+        },
+        "dataMode": "autoMapInputData",
+        "columnToMatchOn": "message.content",
+        "options": {}
+      },
+      "id": "1db2d5fd-fed6-443a-a29e-f3e126dcd823",
+      "name": "Update Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        5080,
+        720
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "id": "47014e9d-f372-4482-9566-0a0c4c1c7e8b",
+      "name": "Split in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        3260,
+        600
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "content": "https://m.maariv.co.il/journalists/opinions/article-1186930\n\n\n{{ $json.body.url }}\n\n1 \nהקלט שלך הוא תוכן ה-HTML של אתר אינטרנט.\nהפלט שלך צריך להיות תוכן של המאמר וסגנון עיתונאי.\nיש לשמור על התוכן העיקרי של האתר.\n\n2\nYou are a smart assistant in journalistic editing and website content extraction. Extract only the main article from a given website content, while fully preserving important facts, quotes and data. Ignore elements such as navigation, ads, scripts and irrelevant links. Produce clear, eloquent and journalistic text, divided into paragraphs with clear headings.\nאתה עוזר חכם בעריכה עיתונאית ובחילוץ תוכן באתר. חלץ רק את המאמר הראשי מתוכן אתר נתון, תוך שמירה מלאה על עובדות חשובות, ציטוטים ונתונים. התעלם ממרכיבים כגון ניווט, מודעות, סקריפטים וקישורים לא רלוונטיים. הפק טקסט ברור, רהוט ועיתונאי, מחולק לפסקאות עם כותרות ברורות.\n\n\nYou are a professional assistant specializing in identifying and extracting the main content from website content. Your task is to filter and keep only the main article content from the text provided to you, while preserving all facts, data and quotes. You must remove content that does not directly belong to the article (e.g. advertising content, side content, comments, links to additional content or site navigation).\nPresent a clean and clear final result, organized into journalistic-style paragraphs, with a clear title and fluent and eloquent content, that can be used directly for publication.\n\nאתה עוזר מקצועי המתמחה בזיהוי והפקת התוכן העיקרי מתוכן האתר. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי מהטקסט שסופק לך, תוך שמירה על כל העובדות, הנתונים והציטוטים. עליך להסיר תוכן שאינו שייך ישירות למאמר (כגון תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים או ניווט באתר).\nהציגו תוצאה סופית נקייה וברורה, מאורגנת בפסקאות בסגנון עיתונאי, עם כותרת ברורה ותוכן קולח ורהוט, שניתן להשתמש בהם ישירות לפרסום.\n\n\nאאתה עוזר בעריכה עיתונאית וחילוץ תוכן. חלץ רק את המאמר המרכזי מהאתר, תוך שמירת עובדות, ציטוטים ונתונים חשובים. התעלם מניווט, פרסומות, קישורים וסקריפטים. הפק טקסט רהוט ועיתונאי, מחולק לפסקאות עם כותרות.\n",
+        "height": 880,
+        "width": 540
+      },
+      "id": "c77d540f-3279-4be6-8a8c-7ca32ac2ba1e",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5540,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "e29c311f-ddab-4d44-afdc-53383b3a735e",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        2640,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "aae4aac8-dd0c-49c5-8d48-a11ef009b69d",
+      "name": "Retrieve URLs",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2840,
+        220
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$json.Url}}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "5aa6c6e5-2d56-4bd4-9993-3a37f6ee7168",
+      "name": "Request HTML Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3560,
+        640
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dd3fb30e-16a0-4e24-87fa-857fb4d2d098",
+      "name": "Cut out the body",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        3820,
+        640
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4-turbo-preview",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "אתה עוזר מקצועי המתמחה בזיהוי והפקת התוכן העיקרי מתוכן האתר. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי מהטקסט שסופק לך, תוך שמירה על כל העובדות, הנתונים והציטוטים. עליך להסיר תוכן שאינו שייך ישירות למאמר (כגון תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים או ניווט באתר).\nהציגו תוצאה סופית נקייה וברורה, מאורגנת בפסקאות בסגנון עיתונאי, עם כותרת ברורה ותוכן קולח ורהוט, שניתן להשתמש בהם ישירות לפרסום."
+            },
+            {
+              "content": "=תוכן האתר: {{ $json.contentShort }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "19663c35-cf8f-4e25-9e1f-07635c1d5c16",
+      "name": "Ask the AI",
+      "type": "n8n-nodes-base.openAi",
+      "position": [
+        4300,
+        640
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content",
+        "options": {}
+      },
+      "id": "8780ab63-82ba-4502-ac29-66fc307571a4",
+      "name": "Split Out the Description",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        4540,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-website-content",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        600
+      ],
+      "id": "8adf07d3-45e4-4287-9f32-7f2c29b1d5ca",
+      "name": "Scrapping Hook",
+      "webhookId": "6d361ddc-e1a6-4ff2-bdfa-9e0f8aa7bb99"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "6691749c-5707-4cd2-95cd-24e525b66468",
+      "name": "Delete Url",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2840,
+        600
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Url": "={{ $json.body.url }}"
+          },
+          "matchingColumns": [
+            "Url"
+          ],
+          "schema": [
+            {
+              "id": "Url",
+              "displayName": "Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cef064f3-753d-49c5-96cb-0b9d8a08ab3b",
+      "name": "Input the Url",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        3040,
+        600
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/custom_fields/{{ $vars.website_content_field_id  }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "={{ $('Split in Batches').item.json[\"message.content\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3840,
+        200
+      ],
+      "id": "b91b447e-b0d7-4bc3-a4de-49f768c03daf",
+      "name": "Send Website Content",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{$vars.integrate_article_flow_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4100,
+        200
+      ],
+      "id": "250a0daa-9a96-4b19-9936-53e15a5e66f5",
+      "name": "Send Website Process Flow",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{$vars.user_id}}/custom_fields/{{ $vars.website_content_field_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3580,
+        200
+      ],
+      "id": "6d4af240-20b0-4cc9-ae23-1b881a250a00",
+      "name": "Init Website Content",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask the AI": {
+      "main": [
+        [
+          {
+            "node": "Split Out the Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content": {
+      "main": [
+        [
+          {
+            "node": "Ask the AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve URLs": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Retrieve URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body": {
+      "main": [
+        [
+          {
+            "node": "Clean Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split in Batches": {
+      "main": [
+        [
+          {
+            "node": "Init Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request HTML Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request HTML Data": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out the Description": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Scrapping Hook": {
+      "main": [
+        [
+          {
+            "node": "Delete Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Url": {
+      "main": [
+        [
+          {
+            "node": "Input the Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input the Url": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Website Content": {
+      "main": [
+        [
+          {
+            "node": "Send Website Process Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Website Content": {
+      "main": [
+        [
+          {
+            "node": "Send Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fa5096b4-e555-4147-b20a-5d7a26ff38a7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "VWCfxrT7SZoanxNr",
+  "tags": []
+}

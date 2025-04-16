@@ -1,0 +1,194 @@
+{
+  "name": "Item Info(3 Audio Files)",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"hetzner_domain\": \"fsn1.your-objectstorage.com\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1360,
+        -980
+      ],
+      "id": "91b0c8a7-3414-44b5-85de-aa55f9240017",
+      "name": "Hetzner Domain"
+    },
+    {
+      "parameters": {
+        "path": "item-info",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1540,
+        -980
+      ],
+      "id": "9e2b0ef5-5143-4677-8627-8c3ed02ec820",
+      "name": "Webhook",
+      "webhookId": "3243184b-515b-4e16-a537-f2f0b2e3083f"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"audio1\": \"{{ $json.audio_url1 }}\",\n  \"audio2\": \"{{ $json.audio_url2 }}\",\n  \"audio3\": \"{{ $json.audio_url3 }}\",\n  \"duration\" : \"{{ $json.duration }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -580,
+        -980
+      ],
+      "id": "9568d4b0-85dc-403c-aa0e-22dcfeb200cc",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "function getFormattedPastTimes(datetime) {\n    const originalTime = new Date(datetime);\n\n    const minutesAgo = (minutes) => {\n        const pastTime = new Date(originalTime.getTime() - minutes * 60000);\n        const year = pastTime.getFullYear();\n        const month = String(pastTime.getMonth() + 1).padStart(2, '0');\n        const day = String(pastTime.getDate()).padStart(2, '0');\n        const hours = String(pastTime.getHours()).padStart(2, '0');\n        const mins = String(pastTime.getMinutes()).padStart(2, '0');\n\n        return `${year}-${month}-${day}--${hours}-${mins}`;\n    };\n\n   const endStampTime = (minutes) => {\n        const pastTime = new Date(originalTime.getTime() + minutes * 60000);\n        const year = pastTime.getFullYear();\n        const month = String(pastTime.getMonth() + 1).padStart(2, '0');\n        const day = String(pastTime.getDate()).padStart(2, '0');\n        const hours = String(pastTime.getHours()).padStart(2, '0');\n        const mins = String(pastTime.getMinutes()).padStart(2, '0');\n\n        return `${year}-${month}-${day} ${hours}:${mins}`;\n    };\n\n    const startStampTime = (minutes) => {\n        const pastTime = new Date(originalTime.getTime() - minutes * 60000);\n        const year = pastTime.getFullYear();\n        const month = String(pastTime.getMonth() + 1).padStart(2, '0');\n        const day = String(pastTime.getDate()).padStart(2, '0');\n        const hours = String(pastTime.getHours()).padStart(2, '0');\n        const mins = String(pastTime.getMinutes()).padStart(2, '0');\n\n        return `${year}-${month}-${day} ${hours}:${mins}`;\n    };\n\n    return {\n        \"5_minutes_ago\": minutesAgo(5),\n        \"10_minutes_ago\": minutesAgo(10),\n        \"start_stamp_time\" : startStampTime(10),\n        \"end_stamp_time\" : endStampTime(5)\n    };\n}\n\nfunction fileUrls(inputDate) {\n  \n  // Parse the input string into a Date object\n  const regex = /^(\\d{4}-\\d{2}-\\d{2})T(\\d{2}):(\\d{2})/;\n  const matches = inputDate.match(regex);\n\n  const date = matches[1]; // Extracted date\n  const hour = matches[2]; // Extracted hour\n  let strMinute = matches[3]; // Extracted minute\n  let minute = parseInt(strMinute);\n  \n  // Get hours and minutes\n  let temp = Math.floor(Math.abs(minute) / 10) % 10;\n  if (minute % 10 <= 5) \n    minute = temp * 10 + 0; \n  else  \n    minute = temp * 10 + 5;\n\n  strMinute = String(minute).padStart(2, '0');\n\n  \n  // Example usage:\n  let formattedTimes = getFormattedPastTimes(`${date} ${hour}:${strMinute}`);\n  \n  const audio1 = `https://${$('Hetzner Domain').item.json.hetzner_domain}/jpost/radio-103fm/audio/${date}--${hour}-${strMinute}.mp3`;\n  const audio2 = `https://${$('Hetzner Domain').item.json.hetzner_domain}/jpost/radio-103fm/audio/${formattedTimes[\"5_minutes_ago\"]}.mp3`;\n  const audio3 = `https://${$('Hetzner Domain').item.json.hetzner_domain}/jpost/radio-103fm/audio/${formattedTimes[\"10_minutes_ago\"]}.mp3`;\n  \n  // Return the audio file URLS\n  return {json : { audio_url1 : audio1, \n                   audio_url2 : audio2, \n                   audio_url3 : audio3, \n                   duration : `${formattedTimes[\"start_stamp_time\"]} - ${formattedTimes[\"end_stamp_time\"]}`}}\n}\n\nreturn fileUrls($('5Minutes Ago').item.json.newDate)\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        -980
+      ],
+      "id": "8e1543dd-b1be-436d-857b-98648f4dab5e",
+      "name": "Item Info",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -720,
+        -980
+      ],
+      "id": "6e578184-c03e-47ec-a3de-521e986d42cf",
+      "name": "Wait1",
+      "webhookId": "e3d3cd7c-b0c3-4ac1-be18-8a8ac6d85ed3"
+    },
+    {
+      "parameters": {
+        "operation": "subtractFromDate",
+        "magnitude": "={{ $('Current Date Time').item.json.currentDate }}",
+        "timeUnit": "minutes",
+        "duration": 5,
+        "options": {
+          "includeInputFields": false
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        -980
+      ],
+      "id": "bffda2bc-05e4-4b96-9a5c-7aba828647cd",
+      "name": "5Minutes Ago"
+    },
+    {
+      "parameters": {
+        "options": {
+          "timezone": "Etc/GMT-3"
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -1200,
+        -980
+      ],
+      "id": "9a30ec85-512d-4b50-9ffc-c9bf85adb4fa",
+      "name": "Current Date Time"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Hetzner Domain": {
+      "main": [
+        [
+          {
+            "node": "Current Date Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Hetzner Domain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Info": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5Minutes Ago": {
+      "main": [
+        [
+          {
+            "node": "Item Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Current Date Time": {
+      "main": [
+        [
+          {
+            "node": "5Minutes Ago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2a8d3c68-58f4-4a0e-aa58-d0fd92c8788b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "7siIFBQcsOslq1FS",
+  "tags": []
+}

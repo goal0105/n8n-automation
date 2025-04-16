@@ -1,0 +1,101 @@
+{
+  "name": "Redering Video",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={\n\"success\":{{ $json.success }},\n\"renderStatus\" :\"{{ $json.response.status }}\",\n\"url\" : \"{{ $json.response.url }}\",\n\"renderTime\":\"{{ $json.response.renderTime }}\",\n\"error\":\"{{ $json.response.error }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "79c71b94-219c-47d3-b297-c4422e2601e4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "render-video",
+        "responseMode": "=responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ff184fd0-48b7-4584-bb37-a3faa45a92e0",
+      "name": "Renderhook",
+      "webhookId": "eb0d5df4-fae9-4e39-96fe-7a782a5078c9"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.shotstack.io/v1/render/{{ $json.body.queued_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        0
+      ],
+      "id": "4846586d-4b8e-4935-9335-b88b0ec38da8",
+      "name": "ShostStack Render Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Renderhook": {
+      "main": [
+        [
+          {
+            "node": "ShostStack Render Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ShostStack Render Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4e640c33-9bcf-4318-a9a9-363da8be2b75",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "fxRKm124aXHUYVDx",
+  "tags": []
+}

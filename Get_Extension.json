@@ -1,0 +1,85 @@
+{
+  "name": "Get Extension",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-extension",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e1048d78-874e-4af3-91c3-034d468d9b32",
+      "name": "Webhook",
+      "webhookId": "6baad316-18e5-47ea-9768-ac09485d9dfb"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n// Function to get file extension from URL\nfunction getFileExtension(url) {\n  const filename = url.substring(url.lastIndexOf('/') + 1);\n  const dotIndex = filename.lastIndexOf('.');\n\n  // Check if the filename contains a dot\n  if (dotIndex === -1) return '';\n\n  // Return extension without dot\n  return filename.substring(dotIndex + 1).toLowerCase();\n}\n\nreturn {json : {extension : getFileExtension($input.first().json.body.file_url)}}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2aca3602-fd99-4ea3-a595-711f2a3a1673",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=\"text\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "f30a52c2-d6c5-4563-ac09-21563ea29111",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6a759336-18a4-4560-8638-ef105cba65fc",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "7wu2iJTfvLrpGyRz",
+  "tags": []
+}

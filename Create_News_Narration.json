@@ -1,0 +1,451 @@
+{
+  "name": "Create News Narration",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"sucess\": {{ $json.success }},\n  \"url\" : \"{{ $json.response.url }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "97e33028-a40c-4b1d-bce7-42d5468b228e",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "60d8549d-2cb1-42d2-a812-ea5b4498fb8c",
+              "leftValue": "={{ $json.response.status }}",
+              "rightValue": "done",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "a0839b49-3adc-412f-b21b-2085502a7921",
+              "leftValue": "={{ $json.response.status }}",
+              "rightValue": "failed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        20
+      ],
+      "id": "4665edd8-6434-4102-9932-10e8c683eedd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5de3fd69-3c2c-4295-803c-0b5427c5268f",
+              "name": "$vars.renderID",
+              "value": "={{ $json.response.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -620,
+        20
+      ],
+      "id": "36b8872a-f06d-4e25-9117-18e307b8bde6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5843f398-b606-4ece-b62d-7385c68c0b26",
+              "name": "$vars.renderID",
+              "value": "={{ $json.response.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        140
+      ],
+      "id": "1d8596e5-209e-41a7-8a11-8513ebeeb538",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-news-video",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1640,
+        180
+      ],
+      "id": "95efcd3b-f456-482e-ada3-75da1f2941a0",
+      "name": "Webhook1",
+      "webhookId": "7e1bdfab-4950-4be5-9394-175fb5db7e88"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.shotstack.io/stage/render/{{ $json.$vars.renderID }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "7CsGi2tHxaAX3rggCdaK0PZTjbIAQZLz1gTifRly"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -440,
+        20
+      ],
+      "id": "c27969d9-02fe-4431-a57e-95e2e22b2e1f",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "output_format",
+              "value": "mp3_44100_128"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "sk_686a96ca342e8db119872acd0f8c3b2ee2efdf7bd062b9df"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.body['full-article'] }}"
+            },
+            {
+              "name": "model_id",
+              "value": "eleven_multilingual_v2"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1420,
+        180
+      ],
+      "id": "b0d9894e-e645-4b6a-921a-854680486478",
+      "name": "Generate Hebrew"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://storage.bunnycdn.com/shotstack-storage/narration.mp3",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "AccessKey",
+              "value": "929d0ebd-ae83-4d50-96751bf3dd95-b5e1-42e6"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1200,
+        180
+      ],
+      "id": "4c000f3e-f6c8-4981-995b-0b17bd990093",
+      "name": "Upload Narration"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9f086b62-bf1c-4297-af21-e661e159deb9",
+              "leftValue": "={{ $json.HttpCode }}",
+              "rightValue": 201,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -980,
+        180
+      ],
+      "id": "613c1a4f-3382-44ab-b53b-fad8cf8307fd",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": \"false\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -780,
+        300
+      ],
+      "id": "fbe5566d-9962-4f7c-a6f9-6afc0b9a931d",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.shotstack.io/stage/render",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "7CsGi2tHxaAX3rggCdaK0PZTjbIAQZLz1gTifRly"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"timeline\": {\n    \"fonts\": [\n      {\n        \"src\": \"https://templates.shotstack.io/breaking-news-summary/a87b7ba9-8d67-4e0f-83ff-ac36d3f3fc5b/source.ttf\"\n      }\n    ],\n    \"soundtrack\": {\n      \"src\": \"https://shotstackzone.b-cdn.net/narration.mp3\"\n    },\n    \"background\": \"#efefef\",\n    \"tracks\": [\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"text\",\n              \"text\": \"{{ $('Webhook1').item.json.body.headline }}\",\n              \"font\": {\n                \"family\": \"Raleway\",\n                \"color\": \"#303030\",\n                \"size\": 51\n              },\n              \"alignment\": {\n                \"horizontal\": \"left\"\n              },\n              \"width\": 1257,\n              \"height\": 90\n            },\n            \"fit\": \"none\",\n            \"scale\": 1,\n            \"offset\": {\n              \"x\": -0.112,\n              \"y\": 0.35\n            },\n            \"position\": \"center\",\n            \"transition\": {\n              \"in\": \"slideLeftSlow\"\n            },\n            \"start\": 1.3,\n            \"length\": \"end\"\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"image\",\n              \"src\": \"https://templates.shotstack.io/breaking-news-summary/e546d9c1-227d-4f85-b5bc-ee12a86f0782/source.jpg\"\n            },\n            \"fit\": \"none\",\n            \"offset\": {\n              \"x\": -0.292,\n              \"y\": 0.352\n            },\n            \"position\": \"center\",\n            \"transition\": {\n              \"in\": \"carouselRight\"\n            },\n            \"start\": 1.25,\n            \"opacity\": 0.3,\n            \"length\": \"end\"\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"text\",\n              \"text\": \"NEWS\",\n              \"font\": {\n                \"family\": \"Montserrat ExtraBold\",\n                \"color\": \"#ffffff\",\n                \"size\": 64\n              },\n              \"alignment\": {\n                \"horizontal\": \"center\"\n              },\n              \"width\": 300,\n              \"height\": 72\n            },\n            \"fit\": \"none\",\n            \"scale\": 1,\n            \"offset\": {\n              \"x\": 0.345,\n              \"y\": 0.346\n            },\n            \"position\": \"center\",\n            \"start\": 1.25,\n            \"transition\": {\n              \"in\": \"slideRightSlow\"\n            },\n            \"length\": \"end\"\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"video\",\n              \"src\": \"https://templates.shotstack.io/breaking-news-summary/zzy9evz0-2wqo-li08-iytu-4wocle1anmht/source.mov\"\n            },\n            \"start\": 0,\n            \"offset\": {\n              \"x\": 0.427,\n              \"y\": 0.401\n            },\n            \"position\": \"center\",\n            \"scale\": 0.26,\n            \"length\": \"end\"\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"text\",\n              \"text\": \"TODAY'S\",\n              \"font\": {\n                \"family\": \"Montserrat ExtraBold\",\n                \"color\": \"#eea91a\",\n                \"size\": 80\n              },\n              \"alignment\": {\n                \"horizontal\": \"left\"\n              },\n              \"width\": 437,\n              \"height\": 92\n            },\n            \"fit\": \"none\",\n            \"scale\": 1,\n            \"offset\": {\n              \"x\": 0.358,\n              \"y\": 0.431\n            },\n            \"position\": \"center\",\n            \"start\": 1,\n            \"length\": \"end\",\n            \"transition\": {\n              \"in\": \"slideRightSlow\"\n            }\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"length\": \"end\",\n            \"asset\": {\n              \"type\": \"image\",\n              \"src\": \"https://shotstackzone.b-cdn.net/the-jerusalem-post-tel-aviv-chaim-v-chessed-the-jerusalem-report-the-times-of-israel-others-2349a7dc4a9b0e2c935578e0b2696031.png\"\n            },\n            \"start\": 0,\n            \"offset\": {\n              \"x\": -0.304,\n              \"y\": -0.437\n            },\n            \"position\": \"center\",\n            \"scale\": 0.394\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"video\",\n              \"src\": \"https://templates.shotstack.io/breaking-news-summary/zzy9evh8-0x80-ii37-ouvb-00aabf0gxtoq/source.mov\"\n            },\n            \"start\": 0,\n            \"offset\": {\n              \"x\": 0,\n              \"y\": 0\n            },\n            \"position\": \"center\",\n            \"length\": \"end\",\n            \"scale\": 1\n          }\n        ]\n      },\n      {\n        \"clips\": [\n          {\n            \"asset\": {\n              \"type\": \"video\",\n              \"src\": \"{{ $('Webhook1').item.json.body['hebrew-video-url'] }}\",\n              \"volume\": 0.5\n            },\n            \"scale\": 0.98,\n            \"offset\": {\n              \"x\": -0.038,\n              \"y\": -0.103\n            },\n            \"transition\": {\n              \"in\": \"carouselDown\"\n            },\n            \"position\": \"center\",\n            \"length\": \"end\",\n            \"start\": 0\n          }\n        ]\n      }\n    ]\n  },\n  \"output\": {\n    \"format\": \"mp4\",\n    \"size\": {\n      \"width\": 1920,\n      \"height\": 1080\n    }\n  },\n  \"merge\": [\n    {\n      \"find\": \"HEADLINE\",\n      \"replace\": \"Rate of unemployment has dropped\"\n    },\n    {\n      \"find\": \"B_ROLL_VIDEO\",\n      \"replace\": \"https://templates.shotstack.io/breaking-news-summary/85a22481-c670-4348-a26f-dd35acbbfa24/source.mp4\"\n    }\n  ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -780,
+        20
+      ],
+      "id": "d67c0dbb-0f09-49f3-bcf5-007c8de09955",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Generate Hebrew",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Hebrew": {
+      "main": [
+        [
+          {
+            "node": "Upload Narration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Narration": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "33690279-bf3f-48cd-a0a2-a441fbb61b28",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "g78W3ICEeKIwe5p5",
+  "tags": []
+}

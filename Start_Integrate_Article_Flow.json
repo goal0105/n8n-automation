@@ -1,0 +1,82 @@
+{
+  "name": "Start Integrate Article Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{ $vars.integrate_article_flow_id}} ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        -20
+      ],
+      "id": "9797b144-803c-4f43-b6d5-f5989ea60cb9",
+      "name": "Send Integrate Article Flow",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "send-integreate-article-flow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        -20
+      ],
+      "id": "5958f59a-d27e-467f-a867-69f6349bd89d",
+      "name": "Trigger",
+      "webhookId": "e4f3980f-199b-4aed-9b11-a0046483abc2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Integrate Article Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4e3177a7-7109-47de-a7de-3a9114aa7953",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "BbScBelKOGq0Aspj",
+  "tags": []
+}

@@ -1,0 +1,301 @@
+{
+  "name": "Generate Video",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={\n\"success\" : {{ $json.success}},\n\"url\" : \"{{ $json.response.url }}\",\n\"status\" : \"{{ $json.response.status}}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1e51089d-7587-47e3-9d45-c49410cb9c5c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.shotstack.io/v1/render/{{ $json.$vars.renderID }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        100
+      ],
+      "id": "599b371e-0cf2-4f98-83fd-b37caddf026e",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "60d8549d-2cb1-42d2-a812-ea5b4498fb8c",
+              "leftValue": "={{ $json.response.status }}",
+              "rightValue": "done",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "a0839b49-3adc-412f-b21b-2085502a7921",
+              "leftValue": "={{ $json.response.status }}",
+              "rightValue": "failed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        100
+      ],
+      "id": "3161e6d9-ad20-4538-b4b4-81c82fe017a2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-shotstackvideo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -920,
+        100
+      ],
+      "id": "aceb5bf2-26e7-43cc-bf4a-f74cf15c68bb",
+      "name": "Webhook1",
+      "webhookId": "76ca112e-bc75-4ea9-accb-265c59bdc879"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.shotstack.io/v1/render",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "1GSC6MeVhQ2FClIfvCKqS4NA8TRVwr91M0VBT1qf"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -740,
+        100
+      ],
+      "id": "f0cdc3de-90fc-4291-bf84-b6b7e1c47e19",
+      "name": "Queued Video"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5de3fd69-3c2c-4295-803c-0b5427c5268f",
+              "name": "$vars.renderID",
+              "value": "={{ $json.response.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        100
+      ],
+      "id": "8adfd3f4-f2eb-4253-98ee-280e640003f2",
+      "name": "Set RenderId"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5843f398-b606-4ece-b62d-7385c68c0b26",
+              "name": "$vars.renderID",
+              "value": "={{ $json.response.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        180
+      ],
+      "id": "c88b21f6-bd28-410a-98bf-5f9409023fb3",
+      "name": "Reset RenderId"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        140,
+        180
+      ],
+      "id": "93724901-8d12-4896-b98f-a37230f1e592",
+      "name": "Wait",
+      "webhookId": "314f9ed9-6b02-4715-a94b-646aeb0618c1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reset RenderId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Queued Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queued Video": {
+      "main": [
+        [
+          {
+            "node": "Set RenderId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set RenderId": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reset RenderId": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1c9bfe0c-ce9e-4a54-8996-aada56af123b",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "VgoFvGzj2yqKhxa3",
+  "tags": []
+}
