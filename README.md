@@ -81,6 +81,16 @@ This includes various n8n flows such as <b>Radio news</b>, <b>Groq traslation</b
   universe_domain: googleapis.com
   ```
 
+  - Google Cloud Storage Account
+  ```sh
+  Client ID : 566080606073-9k8mud12sg48jpc13d2tpb69tqqmqg9k.apps.googleusercontent.com
+  ```
+
+  ```sh
+  Secret Key : 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
+  ```
+
+
 - ShotStack
   ```sh
   Sandbox(jag2pn7hng) : T0mZ85JFMS87u5WYArIGSwQymiCArn511BWJjCjg
