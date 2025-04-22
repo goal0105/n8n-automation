@@ -2,17 +2,6 @@
   "name": "Google Doc",
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -660,
-        -320
-      ],
-      "id": "421e2cef-a5d8-4c6e-a9de-8f8942512939",
-      "name": "When clicking ‘Test workflow’"
-    },
-    {
       "parameters": {
         "httpMethod": "POST",
         "path": "write-to-google-doc",
@@ -104,7 +93,7 @@
             {
               "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
               "name": "string",
-              "value": "={{ $('Google Doc Hook').item.json.body.text }}",
+              "value": "=כדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
               "type": "string"
             }
           ]
@@ -137,7 +126,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"lineSpacing\": 90,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": 6, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $node[\"OCR Text\"].json.string.length + 1 }}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": 10,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -166,33 +155,48 @@
     },
     {
       "parameters": {
-        "content": "{{ $('Google Doc Hook').item.json.body.text }}",
-        "height": 100,
-        "width": 760
+        "content": "\n{{ $('Google Doc Hook').item.json.body.text }}\n\nFont size and Linespacing\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"lineSpacing\": 90,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": 6, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $node[\"OCR Text\"].json.string.length + 1 }}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": 10,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n\n\nOriginal\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n",
+        "height": 320,
+        "width": 500
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -280,
-        -300
+        140,
+        -480
       ],
       "id": "e659f218-f228-4c51-9150-28bc1a97a6da",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
+        "height": 320,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        -480
+      ],
+      "id": "fa45702b-176f-4fce-999a-0e787cbdaa87",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -400
+      ],
+      "id": "421e2cef-a5d8-4c6e-a9de-8f8942512939",
+      "name": "Mouse Click"
     }
   ],
   "pinData": {},
   "connections": {
-    "When clicking ‘Test workflow’": {
-      "main": [
-        [
-          {
-            "node": "Create Google Doc",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Google Doc Hook": {
       "main": [
         [
@@ -248,13 +252,24 @@
         ],
         []
       ]
+    },
+    "Mouse Click": {
+      "main": [
+        [
+          {
+            "node": "Create Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a89d480f-8ee9-4f6f-8555-48a5b6b4e28c",
+  "versionId": "e60d949f-c7e0-4e12-ade3-cf4afe4ec552",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
