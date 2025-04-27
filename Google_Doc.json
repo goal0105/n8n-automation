@@ -12,7 +12,7 @@
       "typeVersion": 2,
       "position": [
         -660,
-        -60
+        -140
       ],
       "id": "4c59ab74-3ddf-4a58-8569-838d58794fc0",
       "name": "Google Doc Hook",
@@ -27,8 +27,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        500,
-        -60
+        540,
+        -140
       ],
       "id": "6b68aae1-0b07-4c46-a3bb-bfafb9537ef1",
       "name": "Return File URL"
@@ -42,8 +42,8 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        -380,
-        -60
+        -420,
+        -140
       ],
       "id": "57bf7da4-0874-484d-a17c-d5bd088b545b",
       "name": "Create Google Doc",
@@ -74,8 +74,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -160,
-        -60
+        -200,
+        -140
       ],
       "id": "008b3eba-da69-4ea3-83e2-33db603fd560",
       "name": "Share Doc",
@@ -93,7 +93,7 @@
             {
               "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
               "name": "string",
-              "value": "=כדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
+              "value": "={{ $('Google Doc Hook').item.json.body.text }}\n",
               "type": "string"
             }
           ]
@@ -103,8 +103,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        60,
-        -60
+        40,
+        -140
       ],
       "id": "c4c9ae05-dbd5-46c5-ae80-c470213a3aab",
       "name": "OCR Text"
@@ -126,14 +126,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"lineSpacing\": 90,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": 6, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $node[\"OCR Text\"].json.string.length + 1 }}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": 10,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         280,
-        -60
+        -140
       ],
       "id": "5804dbbb-cf37-4e74-b554-a2e1ff6de3b0",
       "name": "Insert RTL Text",
@@ -155,30 +155,30 @@
     },
     {
       "parameters": {
-        "content": "\n{{ $('Google Doc Hook').item.json.body.text }}\n\nFont size and Linespacing\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"lineSpacing\": 90,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": 6, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $node[\"OCR Text\"].json.string.length + 1 }}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": 10,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n\n\nOriginal\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n",
-        "height": 320,
-        "width": 500
+        "content": "{{ $('Google Doc Hook1').item.json.body.font_size }}\n{{ $('Google Doc Hook1').item.json.body.text }}\n\nFont size and Linespacing\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($json.text) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"alignment\": \"{{ $json.alignment }}\",\n            \"lineSpacing\": 120,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": {{$json.spaceBelow}}, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": {{ $('Google Doc Hook1').item.json.body.font_size }},\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n\n\nOriginal\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n",
+        "height": 940,
+        "width": 460
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        140,
-        -480
+        780,
+        -300
       ],
       "id": "e659f218-f228-4c51-9150-28bc1a97a6da",
       "name": "Sticky Note"
     },
     {
       "parameters": {
-        "content": "Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
-        "height": 320,
-        "width": 520
+        "content": "## Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
+        "height": 500,
+        "width": 400
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -420,
-        -480
+        1260,
+        120
       ],
       "id": "fa45702b-176f-4fce-999a-0e787cbdaa87",
       "name": "Sticky Note1"
@@ -188,14 +188,313 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -680,
-        -400
+        -660,
+        360
       ],
       "id": "421e2cef-a5d8-4c6e-a9de-8f8942512939",
       "name": "Mouse Click"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-formated-google-doc",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        180
+      ],
+      "id": "e24f8a62-7673-4ac3-b833-13b7106784d8",
+      "name": "Google Doc Hook1",
+      "webhookId": "7d8fe18a-8ecf-4c9e-bb60-e71781b132cc"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=https://docs.google.com/document/d/{{ $json.documentId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        580,
+        180
+      ],
+      "id": "26ad7e2b-2072-48d5-b98a-acb8ac362a2a",
+      "name": "Return File URL1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "folderId": "default",
+        "title": "google ocr result"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        180
+      ],
+      "id": "6b617ce2-6cbb-4692-a206-50eb69bcd9e3",
+      "name": "Create Google Doc1",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -240,
+        180
+      ],
+      "id": "c15f8560-48fb-4c3f-96e7-9f9743654bce",
+      "name": "Share Doc1",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
+              "name": "string",
+              "value": "={{ $('Google Doc Hook1').item.json.body.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        180
+      ],
+      "id": "351bc9b0-34c7-4187-b3ac-7cbdd251864b",
+      "name": "OCR Text1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Create Google Doc1').item.json.id }}:batchUpdate ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        380,
+        180
+      ],
+      "id": "1ccab541-89ba-43f0-abd3-cfb26ff35797",
+      "name": "Insert Formated RTL Text1",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet spaceBelow;\n// const temp = \"Continu\";\nconst temp = JSON.stringify($('Google Doc Hook1').first().json.body.line_mode);\nlet textWithStars = $input.first().json.string // OCR text\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    textWithStars = textWithStars.replaceAll(\"\\n\\n\", \" \");\n    textWithStars = textWithStars.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\n\n// const textWithStars = $input.first().json.string;\n\n// ------------------------------------------------------------------\n//  Walk through the string, strip  **  and capture every bold range\n// ------------------------------------------------------------------\nlet clean = \"\";\nconst boldRanges = [];     // { start: <int>, end: <int> }   (1-based indices)\nlet pos = 1;               // Google Docs uses 1-based index\n\nconst regex = /\\*\\*(.*?)\\*\\*/gs;   // global & dot-all\nlet lastIndex = 0;\n\nfor (const m of textWithStars.matchAll(regex)) {\n  // 1) copy the plain chunk that precedes **…**\n  const plain = textWithStars.slice(lastIndex, m.index);\n  clean += plain;\n  pos += plain.length;\n\n  // 2) record the bold chunk's start / end\n  const boldText = m[1];\n  const start = pos;\n  const end   = start + boldText.length;\n  boldRanges.push({ start, end });\n\n  // 3) append the bold text (without the **)\n  clean += boldText;\n  pos = end;\n\n  lastIndex = m.index + m[0].length;\n}\n\n// 4) tail after the final **\nclean += textWithStars.slice(lastIndex);\n\n// ------------------------------------------------------------------\n//  Build the Docs API requests\n// ------------------------------------------------------------------\nconst requests = [];\n\n// 1) insert the cleaned (plain) text at index 1\nrequests.push({\n  insertText: {\n    location: { index: 1 },\n    text: clean\n  }\n});\n\n// 2) (optional) paragraph-level RTL / spacing settings\nrequests.push({\n  updateParagraphStyle: {\n    range: { startIndex: 1, endIndex: clean.length + 1 },\n    paragraphStyle: {\n      direction: \"RIGHT_TO_LEFT\",\n      alignment: alignment,\n      lineSpacing: 120,\n      spaceAbove: { magnitude: 0, unit: \"PT\" },\n      spaceBelow: { magnitude: spaceBelow, unit: \"PT\" }\n    },\n    fields: \"direction,alignment,lineSpacing,spaceAbove,spaceBelow\"\n  }\n});\n\nrequests.push(\n  {\n    updateTextStyle : {\n        \"range\": {\"startIndex\": 1, endIndex: clean.length + 1},\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": $('Google Doc Hook1').item.json.body.font_size,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n    }\n  });\n\n// 3) one updateTextStyle per bold range\nfor (const r of boldRanges) {\n  requests.push({\n    updateTextStyle: {\n      range: { startIndex: r.start, endIndex: r.end },\n      textStyle: { bold: true },\n      fields: \"bold\"\n    }\n  });\n}\n\n// Pass the body on to the next HTTp\nreturn {json : {requests  : requests}};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        180
+      ],
+      "id": "704be1ef-43ec-44a1-b3a8-6da8391476d1",
+      "name": "Set Request Body"
+    },
+    {
+      "parameters": {
+        "content": "## Setting Code for Paragraphstyle\nlet spaceBelow;\nconst temp = \"Continu\";\n// const temp = JSON.stringify($('Google Doc Hook1').first().json.body.line_mode);\nlet ocr_text = $input.first().json.string\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    ocr_text = ocr_text.replaceAll(\"\\n\\n\", \" \");\n    ocr_text = ocr_text.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\nreturn {json : {spaceBelow : spaceBelow, \n                text : ocr_text,\n                alignment : alignment\n               }}",
+        "height": 400,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        -300
+      ],
+      "id": "78334544-c112-44ca-ba71-72ee5091b050",
+      "name": "Sticky Note2"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Set Request Body": [
+      {
+        "json": {
+          "requests": [
+            {
+              "insertText": {
+                "location": {
+                  "index": 1
+                },
+                "text": "Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. אוטומציה ושימוש ב-AI בתהליכי לימוד:\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. אוטומציה בתהליכי מכירה ושיווק:\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. שיפור המערכת הטכנית והאינטגרציה שלה:\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. שדרוג מערכת ה-CRM:\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. שיפור חוויית המשתמש:\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.\n\n"
+              }
+            },
+            {
+              "updateParagraphStyle": {
+                "range": {
+                  "startIndex": 1,
+                  "endIndex": 1447
+                },
+                "paragraphStyle": {
+                  "direction": "RIGHT_TO_LEFT",
+                  "alignment": "START",
+                  "lineSpacing": 90,
+                  "spaceAbove": {
+                    "magnitude": 0,
+                    "unit": "PT"
+                  },
+                  "spaceBelow": {
+                    "magnitude": 6,
+                    "unit": "PT"
+                  }
+                },
+                "fields": "direction,alignment,lineSpacing,spaceAbove,spaceBelow"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 1,
+                  "endIndex": 1447
+                },
+                "textStyle": {
+                  "fontSize": {
+                    "magnitude": 10,
+                    "unit": "PT"
+                  }
+                },
+                "fields": "fontSize"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 224,
+                  "endIndex": 259
+                },
+                "textStyle": {
+                  "bold": true
+                },
+                "fields": "bold"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 483,
+                  "endIndex": 513
+                },
+                "textStyle": {
+                  "bold": true
+                },
+                "fields": "bold"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 737,
+                  "endIndex": 773
+                },
+                "textStyle": {
+                  "bold": true
+                },
+                "fields": "bold"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 974,
+                  "endIndex": 992
+                },
+                "textStyle": {
+                  "bold": true
+                },
+                "fields": "bold"
+              }
+            },
+            {
+              "updateTextStyle": {
+                "range": {
+                  "startIndex": 1173,
+                  "endIndex": 1193
+                },
+                "textStyle": {
+                  "bold": true
+                },
+                "fields": "bold"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
   "connections": {
     "Google Doc Hook": {
       "main": [
@@ -257,7 +556,73 @@
       "main": [
         [
           {
-            "node": "Create Google Doc",
+            "node": "Create Google Doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Doc Hook1": {
+      "main": [
+        [
+          {
+            "node": "Create Google Doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Doc1": {
+      "main": [
+        [
+          {
+            "node": "Share Doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share Doc1": {
+      "main": [
+        [
+          {
+            "node": "OCR Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Text1": {
+      "main": [
+        [
+          {
+            "node": "Set Request Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Request Body": {
+      "main": [
+        [
+          {
+            "node": "Insert Formated RTL Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Formated RTL Text1": {
+      "main": [
+        [
+          {
+            "node": "Return File URL1",
             "type": "main",
             "index": 0
           }
@@ -269,7 +634,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e60d949f-c7e0-4e12-ade3-cf4afe4ec552",
+  "versionId": "d8cb98eb-7203-4ff3-9286-6fa851e4af9c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
