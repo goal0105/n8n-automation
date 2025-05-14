@@ -27,7 +27,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        540,
+        500,
         -140
       ],
       "id": "6b68aae1-0b07-4c46-a3bb-bfafb9537ef1",
@@ -132,7 +132,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        280,
+        260,
         -140
       ],
       "id": "5804dbbb-cf37-4e74-b554-a2e1ff6de3b0",
@@ -155,30 +155,30 @@
     },
     {
       "parameters": {
-        "content": "{{ $('Google Doc Hook1').item.json.body.font_size }}\n{{ $('Google Doc Hook1').item.json.body.text }}\n\nFont size and Linespacing\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($json.text) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"alignment\": \"{{ $json.alignment }}\",\n            \"lineSpacing\": 120,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": {{$json.spaceBelow}}, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": {{ $('Google Doc Hook1').item.json.body.font_size }},\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n\n\nOriginal\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n",
-        "height": 940,
+        "content": "{{ $('Google Doc Hook1').item.json.body.font_size }}\n{{ $('Google Doc Hook1').item.json.body.text }}\n\nFont size and Linespacing\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($json.text) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"paragraphStyle\": \n          { \n            \"direction\": \"RIGHT_TO_LEFT\",\n            \"alignment\": \"{{ $json.alignment }}\",\n            \"lineSpacing\": 120,\n            \"spaceAbove\": {\"magnitude\": 0, \"unit\": \"PT\"}, \n            \"spaceBelow\": {\"magnitude\": {{$json.spaceBelow}}, \"unit\": \"PT\"}\n          },\n        \"fields\": \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n      }\n    },\n    {\n      \"updateTextStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ $json.text.length + 1}}\n        },\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": {{ $('Google Doc Hook1').item.json.body.font_size }},\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n      }\n    }\n  ]\n}\n\n\nOriginal\n{\n  \"requests\": [\n    {\n      \"insertText\": {\n        \"location\": { \"index\": 1 },\n        \"text\": {{ JSON.stringify($('OCR Text').item.json.string) }}\n      }\n    },\n    {\n      \"updateParagraphStyle\": {\n        \"range\": {\n          \"startIndex\": 1,\n          \"endIndex\": {{ parseInt($('OCR Text').item.json.string.length, 10) + 1 }}\n        },\n        \"paragraphStyle\": { \"direction\": \"RIGHT_TO_LEFT\" },\n        \"fields\": \"direction\"\n      }\n    }\n  ]\n}\n\n\n\n          \"weightedFontFamily\": {\n            \"fontFamily\": \"David Libre\"\n          },",
+        "height": 960,
         "width": 460
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        780,
-        -300
+        2380,
+        140
       ],
       "id": "e659f218-f228-4c51-9150-28bc1a97a6da",
       "name": "Sticky Note"
     },
     {
       "parameters": {
-        "content": "## Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.",
+        "content": "## Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. **אוטומציה ושימוש ב-AI בתהליכי לימוד:**\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. **אוטומציה בתהליכי מכירה ושיווק:**\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. **שיפור המערכת הטכנית והאינטגרציה שלה:**\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. **שדרוג מערכת ה-CRM:**\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. **שיפור חוויית המשתמש:**\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.\n\n\nהודעה בדבר הקצאת מקרקעין לצרכי ציבור בעיר חיפה  \n----------------------\n\nמובא בזאת לידיעת הציבור כי בכוונת עיריית חיפה להקצות מקרקעין לצרכי ציבור המפורטים להלן בהליך מקוצר, בכפוף לנוהלי משרד הפנים ובהתאם לחוזרי מנכ\"ל 5/2001, 6/2002, 7/2004, 7/2005 ועל פי התבחינים להקצאת מקרקעין בעיר חיפה ללא תמורה או בתמורה סמלית.\n\nמצורפת בזאת רשימת הבקשות להקצאה שהוגשו:\n\nשם המבקש | מס' ע.ר | כתובת הנכס | גוש וחלקה | השימוש המבוקש\nאגודת זכרון מאיר ע\"ש הגה\"צ רבי דב רובמן זצ\"ל | 580021202 | ביתייר 8 (אגף מזרחי) | 10865/48 | בית ספר \nמוסדות ישועות משה ויז'ניץ חיפה | 580648400 | ביתייר 8 (אגף מזרחי) | 10865/48 | בית ספר\nיחל ישראל | 580056448 | ביתייר 8 (אגף מזרחי) | 10865/48 | בית ספר\n\nהציבור מוזמן להגיש בקשות להקצאת המקרקעין המפורטים להלן או להביע התנגדות בכתב תוך 14 יום ממועד פרסום הודעה זו בהודעה מפורטת ומנומקת והעובדות עליהן היא מסתמכת.\n\nלפרטים נוספים ניתן לפנות למרכזת ועדת הקצאות גב' מירב כוכבי מאגף נכסים ושמאות המחלקה לנכסים ציבוריים (טלפון: 04-8356812 מייל: meravk@haifa.muni.il) רחוב ביאליק 3 חיפה.\n",
         "height": 500,
         "width": 400
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1260,
-        120
+        1960,
+        600
       ],
       "id": "fa45702b-176f-4fce-999a-0e787cbdaa87",
       "name": "Sticky Note1"
@@ -188,8 +188,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -660,
-        360
+        -640,
+        1100
       ],
       "id": "421e2cef-a5d8-4c6e-a9de-8f8942512939",
       "name": "Mouse Click"
@@ -214,14 +214,14 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "=https://docs.google.com/document/d/{{ $json.documentId }}",
+        "responseBody": "=https://docs.google.com/document/d/{{ $('Insert Formated RTL Text1').item.json.documentId }}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        580,
-        180
+        1220,
+        380
       ],
       "id": "26ad7e2b-2072-48d5-b98a-acb8ac362a2a",
       "name": "Return File URL1"
@@ -235,7 +235,7 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        -440,
+        -420,
         180
       ],
       "id": "6b617ce2-6cbb-4692-a206-50eb69bcd9e3",
@@ -267,7 +267,7 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -240,
+        -200,
         180
       ],
       "id": "c15f8560-48fb-4c3f-96e7-9f9743654bce",
@@ -286,7 +286,7 @@
             {
               "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
               "name": "string",
-              "value": "={{ $('Google Doc Hook1').item.json.body.text }}",
+              "value": "={{ $('Google Doc Hook1').item.json.body.text }}\n",
               "type": "string"
             }
           ]
@@ -296,7 +296,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -40,
+        0,
         180
       ],
       "id": "351bc9b0-34c7-4187-b3ac-7cbdd251864b",
@@ -353,12 +353,12 @@
     },
     {
       "parameters": {
-        "jsCode": "\nlet spaceBelow;\n// const temp = \"Continu\";\nconst temp = JSON.stringify($('Google Doc Hook1').first().json.body.line_mode);\nlet textWithStars = $input.first().json.string // OCR text\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    textWithStars = textWithStars.replaceAll(\"\\n\\n\", \" \");\n    textWithStars = textWithStars.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\n\n// const textWithStars = $input.first().json.string;\n\n// ------------------------------------------------------------------\n//  Walk through the string, strip  **  and capture every bold range\n// ------------------------------------------------------------------\nlet clean = \"\";\nconst boldRanges = [];     // { start: <int>, end: <int> }   (1-based indices)\nlet pos = 1;               // Google Docs uses 1-based index\n\nconst regex = /\\*\\*(.*?)\\*\\*/gs;   // global & dot-all\nlet lastIndex = 0;\n\nfor (const m of textWithStars.matchAll(regex)) {\n  // 1) copy the plain chunk that precedes **…**\n  const plain = textWithStars.slice(lastIndex, m.index);\n  clean += plain;\n  pos += plain.length;\n\n  // 2) record the bold chunk's start / end\n  const boldText = m[1];\n  const start = pos;\n  const end   = start + boldText.length;\n  boldRanges.push({ start, end });\n\n  // 3) append the bold text (without the **)\n  clean += boldText;\n  pos = end;\n\n  lastIndex = m.index + m[0].length;\n}\n\n// 4) tail after the final **\nclean += textWithStars.slice(lastIndex);\n\n// ------------------------------------------------------------------\n//  Build the Docs API requests\n// ------------------------------------------------------------------\nconst requests = [];\n\n// 1) insert the cleaned (plain) text at index 1\nrequests.push({\n  insertText: {\n    location: { index: 1 },\n    text: clean\n  }\n});\n\n// 2) (optional) paragraph-level RTL / spacing settings\nrequests.push({\n  updateParagraphStyle: {\n    range: { startIndex: 1, endIndex: clean.length + 1 },\n    paragraphStyle: {\n      direction: \"RIGHT_TO_LEFT\",\n      alignment: alignment,\n      lineSpacing: 120,\n      spaceAbove: { magnitude: 0, unit: \"PT\" },\n      spaceBelow: { magnitude: spaceBelow, unit: \"PT\" }\n    },\n    fields: \"direction,alignment,lineSpacing,spaceAbove,spaceBelow\"\n  }\n});\n\nrequests.push(\n  {\n    updateTextStyle : {\n        \"range\": {\"startIndex\": 1, endIndex: clean.length + 1},\n        \"textStyle\": {\n          \"fontSize\": {\n            \"magnitude\": $('Google Doc Hook1').item.json.body.font_size,\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize\"\n    }\n  });\n\n// 3) one updateTextStyle per bold range\nfor (const r of boldRanges) {\n  requests.push({\n    updateTextStyle: {\n      range: { startIndex: r.start, endIndex: r.end },\n      textStyle: { bold: true },\n      fields: \"bold\"\n    }\n  });\n}\n\n// Pass the body on to the next HTTp\nreturn {json : {requests  : requests}};\n"
+        "jsCode": "\nlet spaceBelow;\nconst temp = JSON.stringify($('Google Doc Hook1').first().json.body.line_mode);\nlet textWithStars = $input.first().json.string  // OCR text\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    textWithStars = textWithStars.replaceAll(\"\\n\\n\", \" \");\n    textWithStars = textWithStars.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\n\n// const textWithStars = $input.first().json.string;\n\n// ------------------------------------------------------------------\n//  Walk through the string, strip  **  and capture every bold range\n// ------------------------------------------------------------------\nlet clean = \"\";\nconst boldRanges = [];     // { start: <int>, end: <int> }   (1-based indices)\nlet pos = 1;               // Google Docs uses 1-based index\n\nconst regex = /\\*\\*(.*?)\\*\\*/gs;   // global & dot-all\nlet lastIndex = 0;\n\nfor (const m of textWithStars.matchAll(regex)) {\n  // 1) copy the plain chunk that precedes **…**\n  const plain = textWithStars.slice(lastIndex, m.index);\n  clean += plain;\n  pos += plain.length;\n\n  // 2) record the bold chunk's start / end\n  const boldText = m[1];\n  const start = pos;\n  const end   = start + boldText.length;\n  boldRanges.push({ start, end });\n\n  // 3) append the bold text (without the **)\n  clean += boldText;\n  pos = end;\n\n  lastIndex = m.index + m[0].length;\n}\n\n// 4) tail after the final **\nclean += textWithStars.slice(lastIndex);\n\n// ------------------------------------------------------------------\n//  Build the Docs API requests\n// ------------------------------------------------------------------\nconst requests = [];\n\n// 1) insert the cleaned (plain) text at index 1\nrequests.push({\n  insertText: {\n    location: { index: 1 },\n    text: clean\n  }\n});\n\n// 2) (optional) paragraph-level RTL / spacing settings\nrequests.push({\n  updateParagraphStyle: {\n    range: { startIndex: 1, endIndex: clean.length + 1 },\n    paragraphStyle: {\n      direction: \"RIGHT_TO_LEFT\",\n      alignment: alignment,\n      lineSpacing: 120,\n      spaceAbove: { magnitude: 0, unit: \"PT\" },\n      spaceBelow: { magnitude: spaceBelow, unit: \"PT\" }\n    },\n    fields: \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n  }\n});\n\nrequests.push(\n  {\n    updateTextStyle : {\n        \"range\": {\"startIndex\": 1, endIndex: clean.length + 1},\n        \"textStyle\": {\n          \"weightedFontFamily\": {\n            \"fontFamily\": \"David Libre\"\n          },\n          \"fontSize\": {\n            \"magnitude\": $('Google Doc Hook1').item.json.body.font_size, // 11\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize, weightedFontFamily\"\n    }\n  });\n\n// 3) one updateTextStyle per bold range\nfor (const r of boldRanges) {\n  requests.push({\n    updateTextStyle: {\n      range: { startIndex: r.start, endIndex: r.end },\n      textStyle: { bold: true },\n      fields: \"bold\"\n    }\n  });\n}\n\n// Pass the body on to the next HTTp\nreturn {json : {requests  : requests}};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        160,
+        180,
         180
       ],
       "id": "704be1ef-43ec-44a1-b3a8-6da8391476d1",
@@ -367,134 +367,700 @@
     {
       "parameters": {
         "content": "## Setting Code for Paragraphstyle\nlet spaceBelow;\nconst temp = \"Continu\";\n// const temp = JSON.stringify($('Google Doc Hook1').first().json.body.line_mode);\nlet ocr_text = $input.first().json.string\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    ocr_text = ocr_text.replaceAll(\"\\n\\n\", \" \");\n    ocr_text = ocr_text.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\nreturn {json : {spaceBelow : spaceBelow, \n                text : ocr_text,\n                alignment : alignment\n               }}",
-        "height": 400,
+        "height": 440,
         "width": 400
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1260,
-        -300
+        1960,
+        140
       ],
       "id": "78334544-c112-44ca-ba71-72ee5091b050",
       "name": "Sticky Note2"
-    }
-  ],
-  "pinData": {
-    "Set Request Body": [
-      {
-        "json": {
-          "requests": [
+    },
+    {
+      "parameters": {
+        "jsCode": "let content =  $input.first().json.content\n\n// Split content into lines\nlet lines = content.split('\\n');\n\n// Detect candidate table blocks\nlet tables = [];\nlet currentTable = [];\n\nfor(let line of lines) {\n    // Check if line looks like table row (contains at least 2 '|')\n    if((line.match(/\\|/g) || []).length >= 2) {\n        currentTable.push(line.trim());\n    } else {\n        if(currentTable.length >= 2) { // at least header and one row\n            tables.push([...currentTable]);\n        }\n        currentTable = [];\n    }\n}\n\n// Push the last detected table\nif(currentTable.length >= 2) {\n    tables.push(currentTable);\n}\n\n// Use first table found for this example (or loop if multiple)\nif(tables.length === 0){\n    throw new Error(\"No table-type text detected\");\n}\n\n// output detected table text and the original content\nreturn [{json: { \n    detectedTable: tables[0],\n    originalContent: content\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        180
+      ],
+      "id": "2473407b-9d5f-4497-84c1-2b3fd1379318",
+      "name": "Code",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let tableLines = $input.first().json.detectedTable\n\n// Convert each line into an array (splitting by pipe '|')\nlet tableArray = tableLines.map(line => line.split('|').map(cell => cell.trim()));\n\n// Ensure equal columns (for robustness)\nconst colCount = tableArray[0].length;\ntableArray = tableArray.filter(row => row.length === colCount);\n\nreturn [{json: {tableArray, originalContent: $input.first().json.originalContent, detectedTableText: tableLines.join('\\n')}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        160
+      ],
+      "id": "364623de-c474-4401-a50b-c864dbc5ad85",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tableArray = $input.first().json.tableArray;\nlet originalContent = $input.first().json.originalContent\nlet detectedTableText = $('Code').first().json.detectedTable \n\n// Find index of detected table text\nlet tableStartIndex = originalContent.indexOf(detectedTableText[0]);\n\nlet lastTableRow = detectedTableText[tableArray.length - 1];\nlet tableEndIndex = originalContent.indexOf(lastTableRow) + lastTableRow.length + 1;\n\nif(tableStartIndex === -1){\n  throw new Error(\"Table text not found in original content\");\n}\n\n// Requests for Google Docs API\nlet requests = [];\n\n// 1. Delete original table text\nrequests.push({\n  deleteContentRange: {\n    range: {\n      startIndex: tableStartIndex,\n      endIndex: tableEndIndex\n    }\n  }\n});\n\n// 2. Insert structured Google Docs table at the same position\nrequests.push({\n  insertTable: {\n    rows: tableArray.length,\n    columns: tableArray[0].length,\n    location: {index: tableStartIndex}\n  }\n});\n\n// Insert cells content\nlet startIndex = tableStartIndex + 4;\nlet currentIndex = startIndex; // table insertion adjusts index slightly\n\nfor (let row = 0; row < tableArray.length; row++) {\n  if (row > 0)\n  {\n    currentIndex += 1; \n  }\n  for (let col = 0; col < tableArray[row].length; col++) {\n    cellText = tableArray[row][col];\n    requests.push({\n      insertText: {\n        text: cellText,\n        location: {index: currentIndex}\n      }\n    });\n    currentIndex += cellText.length + 2; \n    \n  }\n}\n\nreturn [{json: {requests}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        160
+      ],
+      "id": "c6210b32-0e79-4e0d-a2d2-f3f9582e64f5",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Insert Formated RTL Text1').item.json.documentId }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
             {
-              "insertText": {
-                "location": {
-                  "index": 1
-                },
-                "text": "Test Sentence\n\nכדי לפתור את האתגרים והתקלות שמתמודדת התוכנית Litetalk, הנה מספר הצעות ממוקדות שמשלבות אוטומציה, כלים חכמים ושיפור חווית המשתמש, מתוך מטרה לייעל את התהליכים, לחסוך בעלויות ולהעלות את שביעות רצון הלקוחות:\n\n1. אוטומציה ושימוש ב-AI בתהליכי לימוד:\n   - להטמיע מערכת צ'אטבוט מוכוונת AI שמסוגלת לטפל בסשנים הלימודיים בסיסיים, ולהפחית את הצורך במורים אנושיים למקרים שאינם מורכבים מדי.\n   - ניתן לשלב מערכות ללימוד עצמי שמסוגלות לספק תגובות ונתונים בזמן אמת על ההתקדמות.\n\n2. אוטומציה בתהליכי מכירה ושיווק:\n   - הטמעת CRM מתקדם עם יכולות אוטומציה בתהליכי ניהול לידים והטמעת מערכות צ'אטבוט להזנת תגובות מהירות לשאלות והתעניינות של לקוחות פוטנציאליים.\n   - שימוש בכלי אוטומציה לניהול ומעקב אחרי לידים וביצועי קמפיינים פרסומיים.\n\n3. שיפור המערכת הטכנית והאינטגרציה שלה:\n   - עדכון ושדרוג מערכת \"מחמוד\" כדי להפוך אותה ליציבה יותר ולחבר אותה בצורה חלקה לשאר המערכות.\n   - הטמעת כלי תזמון אוטומטיים לקביעת שיעורים, מה שיאלץ לקוחות והלקוחות יכולים לתזמן בקלות ובמהירות.\n\n4. שדרוג מערכת ה-CRM:\n   - להשתמש ב-CRM מתקדם שכולל אוטומציה לניהול הצעות מחיר, רישום לקוחות וטיפול בפניות.\n   - הטמעת מנגנוני ניתוח נתונים חכמים המסוגלים לספק תובנות לשיפור בתהליכים ובקבלת החלטות.\n\n5. שיפור חוויית המשתמש:\n   - פיתוח ממשק משתמש ידידותי ואינטואיטיבי יותר לתהליך הזמנת השיעורים.\n   - שימוש בכלי אוטומציה לצמצום עיכובים בתהליך ומענה מהיר לשאלות הלקוחות.\n\nבאמצעות יישום הפתרונות הנ\"ל, תוכל לתכנית להפחית עלויות, לשפר את היעילות התפעולית ואת שביעות רצון הלקוחות.\n\n"
-              }
-            },
-            {
-              "updateParagraphStyle": {
-                "range": {
-                  "startIndex": 1,
-                  "endIndex": 1447
-                },
-                "paragraphStyle": {
-                  "direction": "RIGHT_TO_LEFT",
-                  "alignment": "START",
-                  "lineSpacing": 90,
-                  "spaceAbove": {
-                    "magnitude": 0,
-                    "unit": "PT"
-                  },
-                  "spaceBelow": {
-                    "magnitude": 6,
-                    "unit": "PT"
-                  }
-                },
-                "fields": "direction,alignment,lineSpacing,spaceAbove,spaceBelow"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 1,
-                  "endIndex": 1447
-                },
-                "textStyle": {
-                  "fontSize": {
-                    "magnitude": 10,
-                    "unit": "PT"
-                  }
-                },
-                "fields": "fontSize"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 224,
-                  "endIndex": 259
-                },
-                "textStyle": {
-                  "bold": true
-                },
-                "fields": "bold"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 483,
-                  "endIndex": 513
-                },
-                "textStyle": {
-                  "bold": true
-                },
-                "fields": "bold"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 737,
-                  "endIndex": 773
-                },
-                "textStyle": {
-                  "bold": true
-                },
-                "fields": "bold"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 974,
-                  "endIndex": 992
-                },
-                "textStyle": {
-                  "bold": true
-                },
-                "fields": "bold"
-              }
-            },
-            {
-              "updateTextStyle": {
-                "range": {
-                  "startIndex": 1173,
-                  "endIndex": 1193
-                },
-                "textStyle": {
-                  "bold": true
-                },
-                "fields": "bold"
-              }
+              "name": "Content-Type",
+              "value": "application/json"
             }
           ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        160
+      ],
+      "id": "97de9c4b-ccaa-4d6b-96a2-cda9679bbecd",
+      "name": "Inser the table",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=https://docs.google.com/document/d/{{ $('Insert Formated RTL Text1').item.json.documentId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1720,
+        160
+      ],
+      "id": "f676c5d8-2109-4754-b3da-abe2da6e8b9b",
+      "name": "Return File URL3"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "={{ $json.documentId }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        620,
+        180
+      ],
+      "id": "a8428852-1731-4c7a-8a33-18799a59e122",
+      "name": "Read Doc",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "4LxnwY9R7QmQBgKV",
+          "name": "Google Docs account"
         }
       }
-    ]
-  },
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "folderId": "default",
+        "title": "google ocr result"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        1100
+      ],
+      "id": "1bb8c788-605a-46d2-bf7c-071fc1d446e4",
+      "name": "Create Google Doc2",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        1100
+      ],
+      "id": "c5581c69-7af5-4083-b77d-1e7e8f7b8fc2",
+      "name": "Share Doc2",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
+              "name": "string",
+              "value": "=\nהחל מיום 1.04.2025 יתעדכן שכר המינימום. להלן נתוני שכר המינימום למבוגר, לנוער, ולבעלי יכולת עבודה מופחתת\n\n*שכר מינימום למבוגר מגיל 18 ומעלה*  \nהחל מ-1 באפריל 2025  \nחודש: 6,247.67 ש\"ח  \nשעה: 34.32 ש\"ח  \nיומי (עד 42 שעות שבועיות):  \n- (6 ימי בשבוע): 249.90 ש\"ח  \n- (5 ימים בשבוע): 288.35 ש\"ח  \n\n*שכר מינימום נוער*  \n173 שעות בחודש  \nגיל | אחוז משכר מינימום | חודש | שעה (עד 40 שעות שבועיות)  \nעד 16 | 70% | 4,373.37 ש\"ח | 25.28 ש\"ח  \nעד 17 | 75% | 4,685.75 ש\"ח | 27.08 ש\"ח  \nעד 18 | 83% | 5,185.57 ש\"ח | 29.97 ש\"ח  \nניר | 60% | 3,748.60 ש\"ח | 21.67 ש\"ח  \n\n*שכר מינימום לבעלי יכולת עבודה מופחתת*  \n(בכפוף לאישור בהתאם לתקנות שכר מינימום עובדים בעלי יכולת עבודה מופחתת)  \nשיעורי יכולת עבודה | אחוז משכר המינימום | שכר חודשי | שכר שעתי  \nמעל 80% | 1 | 6,247.67 ש\"ח | 34.32 ש\"ח  \n70-80% | 80 | 4,988.14 ש\"ח | 27.46 ש\"ח  \n60-70% | 70 | 4,373.37 ש\"ח | 24.03 ש\"ח  \n50-60% | 60 | 3,748.60 ש\"ח | 20.60 ש\"ח  \n40-50% | 50 | 3,123.83 ש\"ח | 17.16 ש\"ח  \n30-40% | 40 | 2,499.07 ש\"ח | 13.73 ש\"ח ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        40,
+        1100
+      ],
+      "id": "f4fb831d-f1c6-47fe-a37b-56a64334fbc2",
+      "name": "OCR Text2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Create Google Doc2').item.json.id }}:batchUpdate ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        1100
+      ],
+      "id": "74376a45-b152-4d0f-9173-35ae9b16fb2c",
+      "name": "Insert Formated RTL Text",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet spaceBelow;\nconst temp = \"space\";\n// const temp = JSON.stringify($('Google Doc Hook2').first().json.body.line_mode);\nlet textWithStars = $input.first().json.string  // OCR text\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    textWithStars = textWithStars.replaceAll(\"\\n\\n\", \" \");\n    textWithStars = textWithStars.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\n\n// const textWithStars = $input.first().json.string;\n\n// ------------------------------------------------------------------\n//  Walk through the string, strip  **  and capture every bold range\n// ------------------------------------------------------------------\nlet clean = \"\";\nconst boldRanges = [];     // { start: <int>, end: <int> }   (1-based indices)\nlet pos = 1;               // Google Docs uses 1-based index\n\nconst regex = /\\*\\*(.*?)\\*\\*/gs;   // global & dot-all\nlet lastIndex = 0;\n\nfor (const m of textWithStars.matchAll(regex)) {\n  // 1) copy the plain chunk that precedes **…**\n  const plain = textWithStars.slice(lastIndex, m.index);\n  clean += plain;\n  pos += plain.length;\n\n  // 2) record the bold chunk's start / end\n  const boldText = m[1];\n  const start = pos;\n  const end   = start + boldText.length;\n  boldRanges.push({ start, end });\n\n  // 3) append the bold text (without the **)\n  clean += boldText;\n  pos = end;\n\n  lastIndex = m.index + m[0].length;\n}\n\n// 4) tail after the final **\nclean += textWithStars.slice(lastIndex);\n\n// ------------------------------------------------------------------\n//  Build the Docs API requests\n// ------------------------------------------------------------------\nconst requests = [];\n\n// 1) insert the cleaned (plain) text at index 1\nrequests.push({\n  insertText: {\n    location: { index: 1 },\n    text: clean\n  }\n});\n\n// 2) (optional) paragraph-level RTL / spacing settings\nrequests.push({\n  updateParagraphStyle: {\n    range: { startIndex: 1, endIndex: clean.length + 1 },\n    paragraphStyle: {\n      direction: \"RIGHT_TO_LEFT\",\n      alignment: alignment,\n      lineSpacing: 120,\n      spaceAbove: { magnitude: 0, unit: \"PT\" },\n      spaceBelow: { magnitude: spaceBelow, unit: \"PT\" }\n    },\n    fields: \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n  }\n});\n\nrequests.push(\n  {\n    updateTextStyle : {\n        \"range\": {\"startIndex\": 1, endIndex: clean.length + 1},\n        \"textStyle\": {\n          \"weightedFontFamily\": {\n            \"fontFamily\": \"David Libre\"\n          },\n          \"fontSize\": {\n            \"magnitude\": 11, // $('Google Doc Hook2').item.json.body.font_size, // 11\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize, weightedFontFamily\"\n    }\n  });\n\n// 3) one updateTextStyle per bold range\nfor (const r of boldRanges) {\n  requests.push({\n    updateTextStyle: {\n      range: { startIndex: r.start, endIndex: r.end },\n      textStyle: { bold: true },\n      fields: \"bold\"\n    }\n  });\n}\n\n// Pass the body on to the next HTTp\nreturn {json : {requests  : requests}};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        1100
+      ],
+      "id": "6d7d694f-3f47-4aa7-9058-dbf9db3dd6cf",
+      "name": "Set Request Body1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "=1z6KfxA-JTdh9pbkTXcsnSou0qJWStJjwNxV6UHyOfmk"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        640,
+        1100
+      ],
+      "id": "eb0f2669-bc65-41e3-a224-82e017056ead",
+      "name": "Read Doc1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "4LxnwY9R7QmQBgKV",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/1z6KfxA-JTdh9pbkTXcsnSou0qJWStJjwNxV6UHyOfmk:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        1080
+      ],
+      "id": "3312f27f-9b8c-4279-bb18-49c58234b08a",
+      "name": "Inser the table1",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=https://docs.google.com/document/d/{{ $('Insert Formated RTL Text').item.json.documentId }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        1300
+      ],
+      "id": "efda8429-3daf-464a-a2b5-2e3bceee1ffb",
+      "name": "Return File URL2"
+    },
+    {
+      "parameters": {
+        "jsCode": "let content =  $input.first().json.content\n\n// Split content into lines\nlet lines = content.split('\\n');\n\n// Detect candidate table blocks\nlet tables = [];\nlet currentTable = [];\n\nfor(let line of lines) {\n    // Check if line looks like table row (contains at least 2 '|')\n    if((line.match(/\\|/g) || []).length >= 2) {\n        currentTable.push(line.trim());\n    } else {\n        if(currentTable.length >= 2) { // at least header and one row\n            tables.push([...currentTable]);\n        }\n        currentTable = [];\n    }\n}\n\n// Push the last detected table\nif(currentTable.length >= 2) {\n    tables.push(currentTable);\n}\n\n// Use first table found for this example (or loop if multiple)\nif(tables.length === 0){\n    throw new Error(\"No table-type text detected\");\n}\n\n// output detected table text and the original content\nreturn [{json: { \n    detectedTables: tables,\n    originalContent: content\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        1100
+      ],
+      "id": "c261f905-2cf2-4c05-875c-81dcce2d4210",
+      "name": "Code3",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let detectedTables = $input.first().json.detectedTables;\nlet tableArrays = [];\n\ndetectedTables.forEach((detectedTable) => {\n    \n  // Convert each line into an array (splitting by pipe '|')\n    let tableArray = detectedTable.map(line => line.split('|').map(cell => cell.trim()));\n    \n    // Ensure equal columns (for robustness)\n    const colCount = tableArray[0].length;\n    tableArray = tableArray.filter(row => row.length === colCount);\n    \n    tableArrays.push(tableArray);  \n});\n\nreturn {json: {tableArrays}};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1080
+      ],
+      "id": "ed4d25cc-da23-4b68-81ff-ffb6ae8afdca",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tableArrays = $input.first().json.tableArrays;\nlet originalContent = $('Code3').first().json.originalContent\nlet detectedTables = $('Code3').first().json.detectedTables\nlet tableStartIndex = [] ;\nlet tableEndIndex = [];\n\n// Find index of detected table text\ndetectedTables.forEach((detectedTable) =>{\n  let startIndex = originalContent.indexOf(detectedTable[0]);\n  let lastTableRow = detectedTable[detectedTable.length - 1];\n  let endIndex = originalContent.indexOf(lastTableRow) + lastTableRow.length + 1;\n  tableStartIndex.push(startIndex);\n  tableEndIndex.push(endIndex);\n});\n\nif(tableStartIndex[0] === -1){\n  throw new Error(\"Table text not found in original content\");\n}\n\n// Requests for Google Docs API\nlet requests = [];\n\n// 1. Delete original table text\nfor (let index = 0; index < detectedTables.length; index++)\n  {\n    requests.push({\n      deleteContentRange: {\n        range: {\n          startIndex: tableStartIndex[index],\n          endIndex: tableEndIndex[index]\n        }\n      }\n    }); \n\n    // 2. Insert structured Google Docs table at the same position\n    const tableArray = tableArrays[index];\n  \n    requests.push({\n      insertTable: {\n        rows: tableArrays.length,\n        columns: tableArrays[0].length,\n        location: {index: tableStartIndex[index]}\n      }\n    });\n\n    // // Insert cells content\n    // let startIndex = tableStartIndex[index] + 4;\n    // let currentIndex = startIndex; // table insertion adjusts index slightly\n    \n    // for (let row = 0; row < tableArray.length; row++) {\n    //   if (row > 0)\n    //   {\n    //     currentIndex += 1; \n    //   }\n    //   for (let col = 0; col < tableArray[row].length; col++) {\n    //     cellText = tableArray[row][col];\n    //     requests.push({\n    //       insertText: {\n    //         text: cellText,\n    //         location: {index: currentIndex}\n    //       }\n    //     });\n    //     currentIndex += cellText.length + 2; \n    //   }\n    // }\n  }\n\n// return [{json: {requests}}];\n\n\nreturn [{json: {detectedTables}}];\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        1080
+      ],
+      "id": "d3b1db77-6011-42f8-9cd8-b4b350a74b2a",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-formated-google-doc-test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        620
+      ],
+      "id": "ef6883fa-0636-4858-8a98-d7b7dc8d8c65",
+      "name": "Google Doc Hook2",
+      "webhookId": "7d8fe18a-8ecf-4c9e-bb60-e71781b132cc"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=https://docs.google.com/document/d/{{ $('Insert Formated RTL Text2').item.json.documentId }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1240,
+        820
+      ],
+      "id": "1bedcb63-b4b8-46f8-bb0e-13dc26981c7d",
+      "name": "Return File URL4"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "folderId": "default",
+        "title": "google ocr result"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        620
+      ],
+      "id": "4fa3db4d-f031-4a88-9123-068b4f29d338",
+      "name": "Create Google Doc3",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -180,
+        620
+      ],
+      "id": "f9bb5b0d-1749-418c-9ee3-7b6fc769808a",
+      "name": "Share Doc3",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1aa7679-c80c-4f97-b6a9-d403c8295882",
+              "name": "string",
+              "value": "={{ $('Google Doc Hook2').item.json.body.text }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        20,
+        620
+      ],
+      "id": "587907de-f00e-4aa4-8542-53c7aa274eda",
+      "name": "OCR Text3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Create Google Doc3').item.json.id }}:batchUpdate ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        620
+      ],
+      "id": "427e5dd0-c3c2-4ded-ae35-48d2657faeba",
+      "name": "Insert Formated RTL Text2",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nlet spaceBelow;\n// const temp = JSON.stringify($('Google Doc Hook2').first().json.body.line_mode);\nconst temp = \"space\";\nlet textWithStars = $input.first().json.string  // OCR text\nlet alignment;\n\nif (temp.includes(\"Continu\"))\n{\n    textWithStars = textWithStars.replaceAll(\"\\n\\n\", \" \");\n    textWithStars = textWithStars.replaceAll(\"\\n\", \" \");\n    alignment = \"JUSTIFIED\"\n    spaceBelow = 0;\n}\nelse\n{\n    spaceBelow = 0;\n    alignment = \"START\"\n}\n\n// const textWithStars = $input.first().json.string;\n\n// ------------------------------------------------------------------\n//  Walk through the string, strip  **  and capture every bold range\n// ------------------------------------------------------------------\nlet clean = \"\";\nconst boldRanges = [];     // { start: <int>, end: <int> }   (1-based indices)\nlet pos = 1;               // Google Docs uses 1-based index\n\nconst regex = /\\*\\*(.*?)\\*\\*/gs;   // global & dot-all\nlet lastIndex = 0;\n\nfor (const m of textWithStars.matchAll(regex)) {\n  // 1) copy the plain chunk that precedes **…**\n  const plain = textWithStars.slice(lastIndex, m.index);\n  clean += plain;\n  pos += plain.length;\n\n  // 2) record the bold chunk's start / end\n  const boldText = m[1];\n  const start = pos;\n  const end   = start + boldText.length;\n  boldRanges.push({ start, end });\n\n  // 3) append the bold text (without the **)\n  clean += boldText;\n  pos = end;\n\n  lastIndex = m.index + m[0].length;\n}\n\n// 4) tail after the final **\nclean += textWithStars.slice(lastIndex);\n\n// ------------------------------------------------------------------\n//  Build the Docs API requests\n// ------------------------------------------------------------------\nconst requests = [];\n\n// 1) insert the cleaned (plain) text at index 1\nrequests.push({\n  insertText: {\n    location: { index: 1 },\n    text: clean\n  }\n});\n\n// 2) (optional) paragraph-level RTL / spacing settings\nrequests.push({\n  updateParagraphStyle: {\n    range: { startIndex: 1, endIndex: clean.length + 1 },\n    paragraphStyle: {\n      direction: \"RIGHT_TO_LEFT\",\n      alignment: alignment,\n      lineSpacing: 120,\n      spaceAbove: { magnitude: 0, unit: \"PT\" },\n      spaceBelow: { magnitude: spaceBelow, unit: \"PT\" }\n    },\n    fields: \"direction, alignment, lineSpacing, spaceAbove, spaceBelow\"\n  }\n});\n\nrequests.push(\n  {\n    updateTextStyle : {\n        \"range\": {\"startIndex\": 1, endIndex: clean.length + 1},\n        \"textStyle\": {\n          \"weightedFontFamily\": {\n            \"fontFamily\": \"David Libre\"\n          },\n          \"fontSize\": {\n            \"magnitude\": 11, // $('Google Doc Hook2').item.json.body.font_size, // 11\n            \"unit\": \"PT\"\n          }\n        },\n        \"fields\": \"fontSize, weightedFontFamily\"\n    }\n  });\n\n// 3) one updateTextStyle per bold range\nfor (const r of boldRanges) {\n  requests.push({\n    updateTextStyle: {\n      range: { startIndex: r.start, endIndex: r.end },\n      textStyle: { bold: true },\n      fields: \"bold\"\n    }\n  });\n}\n\n// Pass the body on to the next HTTp\nreturn {json : {requests  : requests}};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        620
+      ],
+      "id": "05b439cc-fbaa-4cb1-ab22-b15dd59acc3b",
+      "name": "Set Request Body2"
+    },
+    {
+      "parameters": {
+        "jsCode": "let content =  $input.first().json.content\n\n// Split content into lines\nlet lines = content.split('\\n');\n\n// Detect candidate table blocks\nlet tables = [];\nlet currentTable = [];\n\nfor(let line of lines) {\n    // Check if line looks like table row (contains at least 2 '|')\n    if((line.match(/\\|/g) || []).length >= 2) {\n        currentTable.push(line.trim());\n    } else {\n        if(currentTable.length >= 2) { // at least header and one row\n            tables.push([...currentTable]);\n        }\n        currentTable = [];\n    }\n}\n\n// Push the last detected table\nif(currentTable.length >= 2) {\n    tables.push(currentTable);\n}\n\n// Use first table found for this example (or loop if multiple)\nif(tables.length === 0){\n    throw new Error(\"No table-type text detected\");\n}\n\n// output detected table text and the original content\nreturn [{json: { \n    detectedTable: tables[0],\n    originalContent: content\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        620
+      ],
+      "id": "aea93792-aa5c-467b-8033-1d7e368c5403",
+      "name": "Code6",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let tableLines = $input.first().json.detectedTable\n\n// Convert each line into an array (splitting by pipe '|')\nlet tableArray = tableLines.map(line => line.split('|').map(cell => cell.trim()));\n\n// Ensure equal columns (for robustness)\nconst colCount = tableArray[0].length;\ntableArray = tableArray.filter(row => row.length === colCount);\n\nreturn [{json: {tableArray, originalContent: $input.first().json.originalContent, detectedTableText: tableLines.join('\\n')}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        600
+      ],
+      "id": "c5dfaa1c-d646-4fc7-b0a4-9a858eb3d2b0",
+      "name": "Code7"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tableArray = $input.first().json.tableArray;\nlet originalContent = $input.first().json.originalContent\nlet detectedTableText = $('Code6').first().json.detectedTable \n\n// Find index of detected table text\nlet tableStartIndex = originalContent.indexOf(detectedTableText[0]);\n\nlet lastTableRow = detectedTableText[tableArray.length - 1];\nlet tableEndIndex = originalContent.indexOf(lastTableRow) + lastTableRow.length + 1;\n\nif(tableStartIndex === -1){\n  throw new Error(\"Table text not found in original content\");\n}\n\n// Requests for Google Docs API\nlet requests = [];\n\n// 1. Delete original table text\nrequests.push({\n  deleteContentRange: {\n    range: {\n      startIndex: tableStartIndex,\n      endIndex: tableEndIndex\n    }\n  }\n});\n\n// 2. Insert structured Google Docs table at the same position\nrequests.push({\n  insertTable: {\n    rows: tableArray.length,\n    columns: tableArray[0].length,\n    location: {index: tableStartIndex}\n  }\n});\n\n// Insert cells content\nlet startIndex = tableStartIndex + 4;\nlet currentIndex = startIndex; // table insertion adjusts index slightly\n\nfor (let row = 0; row < tableArray.length; row++) {\n  if (row > 0)\n  {\n    currentIndex += 1; \n  }\n  for (let col = 0; col < tableArray[row].length; col++) {\n    cellText = tableArray[row][col];\n    requests.push({\n      insertText: {\n        text: cellText,\n        location: {index: currentIndex}\n      }\n    });\n    currentIndex += cellText.length + 2; \n    \n  }\n}\n\nreturn [{json: {requests}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        600
+      ],
+      "id": "a788007d-b916-4fe2-b30d-0d72c3af7a3e",
+      "name": "Code8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Insert Formated RTL Text2').item.json.documentId }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n \"requests\" : {{ $json.requests.toJsonString()}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        600
+      ],
+      "id": "631d3583-997e-4dae-b96e-c9c55b4f9649",
+      "name": "Inser the table2",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        },
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        },
+        "googleOAuth2Api": {
+          "id": "LsyaABWENQ6h6Jhc",
+          "name": "Google account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=https://docs.google.com/document/d/{{ $('Insert Formated RTL Text2').item.json.documentId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1740,
+        600
+      ],
+      "id": "d60d20b4-8870-4f0a-8f7a-2bda39a6b6f7",
+      "name": "Return File URL5"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "={{ $json.documentId }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        640,
+        620
+      ],
+      "id": "b57e25a4-f047-4c47-be38-8e0f672979c3",
+      "name": "Read Doc2",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "4LxnwY9R7QmQBgKV",
+          "name": "Google Docs account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
   "connections": {
     "Google Doc Hook": {
       "main": [
@@ -556,7 +1122,7 @@
       "main": [
         [
           {
-            "node": "Create Google Doc1",
+            "node": "Create Google Doc2",
             "type": "main",
             "index": 0
           }
@@ -622,7 +1188,308 @@
       "main": [
         [
           {
+            "node": "Read Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Return File URL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Inser the table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inser the table": {
+      "main": [
+        [
+          {
+            "node": "Return File URL3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Doc": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Doc2": {
+      "main": [
+        [
+          {
+            "node": "Share Doc2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share Doc2": {
+      "main": [
+        [
+          {
+            "node": "OCR Text2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Text2": {
+      "main": [
+        [
+          {
+            "node": "Set Request Body1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Formated RTL Text": {
+      "main": [
+        [
+          {
+            "node": "Read Doc1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Request Body1": {
+      "main": [
+        [
+          {
+            "node": "Insert Formated RTL Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Doc1": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inser the table1": {
+      "main": [
+        []
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return File URL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "Inser the table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Doc Hook2": {
+      "main": [
+        [
+          {
+            "node": "Create Google Doc3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Doc3": {
+      "main": [
+        [
+          {
+            "node": "Share Doc3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share Doc3": {
+      "main": [
+        [
+          {
+            "node": "OCR Text3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Text3": {
+      "main": [
+        [
+          {
+            "node": "Set Request Body2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Formated RTL Text2": {
+      "main": [
+        [
+          {
+            "node": "Read Doc2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Request Body2": {
+      "main": [
+        [
+          {
+            "node": "Insert Formated RTL Text2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code6": {
+      "main": [
+        [
+          {
+            "node": "Code7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return File URL4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code7": {
+      "main": [
+        [
+          {
+            "node": "Code8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "Inser the table2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inser the table2": {
+      "main": [
+        [
+          {
+            "node": "Return File URL5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Doc2": {
+      "main": [
+        [
+          {
+            "node": "Code6",
             "type": "main",
             "index": 0
           }
@@ -634,7 +1501,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d8cb98eb-7203-4ff3-9286-6fa851e4af9c",
+  "versionId": "0364385b-21ce-403d-81b2-8ba358de58e9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"

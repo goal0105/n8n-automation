@@ -6,7 +6,7 @@
         "resource": "object",
         "operation": "create",
         "bucketName": "ocr-upload-jerusalem-post",
-        "objectName": "={{ $('Upload File').item.json.upload_file }}",
+        "objectName": "={{ $('Generate File Name').item.json.upload_file }}",
         "createData": {},
         "createQuery": {},
         "encryptionHeaders": {},
@@ -72,7 +72,7 @@
       "type": "n8n-nodes-base.googleCloudStorage",
       "typeVersion": 1,
       "position": [
-        2100,
+        2120,
         -360
       ],
       "credentials": {
@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        2700,
+        2720,
         -360
       ],
       "id": "1c8a3a0b-53ec-4688-8bcc-348b9854df41",
@@ -185,8 +185,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1340,
-        -660
+        3860,
+        1680
       ],
       "id": "5dcc8286-c1db-4931-83b1-572938ed5954",
       "name": "Sticky Note"
@@ -205,7 +205,7 @@
       "type": "n8n-nodes-base.googleCloudStorage",
       "typeVersion": 1,
       "position": [
-        3060,
+        3080,
         -360
       ],
       "credentials": {
@@ -222,7 +222,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2300,
+        2320,
         -360
       ],
       "id": "b0e5221f-a851-46b2-b697-08c37ae1306f",
@@ -235,7 +235,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2880,
+        2900,
         -360
       ],
       "id": "f05822bf-9f92-4d4d-845f-3a937c89fb6a",
@@ -258,7 +258,7 @@
       "type": "n8n-nodes-base.googleCloudStorage",
       "typeVersion": 1,
       "position": [
-        2480,
+        2500,
         -360
       ],
       "credentials": {
@@ -427,7 +427,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2340,
+        2300,
         -160
       ],
       "id": "3928a10e-2d0b-4e2b-aee0-b9a3e3342d88",
@@ -444,7 +444,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        3420,
+        3440,
         -360
       ]
     },
@@ -455,7 +455,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2160,
+        2120,
         -160
       ],
       "id": "b857b00d-223b-4907-9684-e291e7313c7b",
@@ -482,7 +482,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"requests\":[\n    {\n      \"inputConfig\": {\n        \"gcsSource\": {\n          \"uri\": \"{{ $vars.google_bucket }}{{$('Upload File').item.json.upload_file}}\"\n        },\n        \"mimeType\": \"application/pdf\"\n      },\n      \"features\": [\n        {\n          \"type\": \"DOCUMENT_TEXT_DETECTION\"\n        }\n      ],\n      \"outputConfig\": {\n          \"gcsDestination\": {\n          \"uri\": \"gs://ocr-upload-jerusalem-post/\"\n        },\n        \"batchSize\": 10\n      }\n    }\n  ]\n}",
+        "jsonBody": "={\n  \"requests\":[\n    {\n      \"inputConfig\": {\n        \"gcsSource\": {\n          \"uri\": \"{{ $vars.google_bucket }}{{$('Generate File Name').item.json.upload_file}}\"\n        },\n        \"mimeType\": \"application/pdf\"\n      },\n      \"features\": [\n        {\n          \"type\": \"DOCUMENT_TEXT_DETECTION\"\n        }\n      ],\n      \"outputConfig\": {\n          \"gcsDestination\": {\n          \"uri\": \"gs://ocr-upload-jerusalem-post/\"\n        },\n        \"batchSize\": 10\n      }\n    }\n  ]\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -505,7 +505,7 @@
         "resource": "object",
         "operation": "delete",
         "bucketName": "ocr-upload-jerusalem-post",
-        "objectName": "={{ $('Upload File').first().json.upload_file }}",
+        "objectName": "={{ $('Generate File Name').first().json.upload_file }}",
         "getParameters": {},
         "requestOptions": {}
       },
@@ -514,7 +514,7 @@
       "type": "n8n-nodes-base.googleCloudStorage",
       "typeVersion": 1,
       "position": [
-        3240,
+        3260,
         -360
       ],
       "credentials": {
@@ -549,7 +549,578 @@
         -160
       ],
       "id": "e921a98e-25c3-471b-89ba-370352310d5b",
-      "name": "Upload File"
+      "name": "Generate File Name"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=📦 Prompt: Statutory Notice OCR Formatter with Error Checks and Layout Fidelity (Final – Certified)\n\nYou are a Hebrew-language document formatter for the statutory publications department of a newspaper.\nYour job is to take raw OCR output from legal or government notices and return a clean, well-formatted body of text in Hebrew — ready for publication in a legal print layout.\n\n❗ VERY IMPORTANT: The text you receive is legally approved by the client.  \nDO NOT, under any circumstances, rewrite, rephrase, adjust, or change the wording.  \nReturn the text as-is, with formatting only.\n\n----------------------------------------\n📋 Instructions:\n- Preserve multi-line titles at the top\n- Insert a horizontal line (----------------------) beneath the title section\n- Place section headers (e.g., מטרת התכנית:) on their own line, surrounded with double asterisks: **מטרת התכנית:**\n- Sub-headers (e.g., מחוז: דרום) should appear on their own lines as well\n- Use empty lines between logical sections\n- Use `**` to bold names and titles in the signature block (e.g., **נתן אלנתן**)\n- If the signatory name and title appear, bold them exactly as written.  \n  If no signature is found, do not insert anything. Do not guess or complete.\n- Include legal footnotes only if they appear in the OCR input\n- Do not include any line such as “סרוק לצפייה במסמכים” or barcode instructions unless they are explicitly found in the input\n- Remove all noise: timestamps, email metadata, scanner markers, page numbers, file names\n- Fix only obvious OCR character issues (e.g., \"תמיימ\" → \"תמ\\\"מ\"), and only when certain\n- Restore logical order if elements (like date or footer) appear in the wrong position\n\n----------------------------------------\n🖋 Formatting:\n• Hebrew only  \n• Use double asterisks (`**`) only for section titles and names  \n• Do not bold regular body content  \n• No HTML or markdown beyond `**`  \n• Do not include notes, summaries, or explanations\n\n----------------------------------------\n📄 Output Example:\n**הודעה בדבר הפקדת תכנית מתאר מחוזית למחוז דרום**  \n**תמ”מ 4/14/101 – תיירות, פנאי ונופש**  \n**לפי חוק התכנון והבנייה, התשכ\"ה–1965**  \n------------------------------\n\n(טקסט...)\n\n**מטרת התכנית:**  \n(תוכן...)\n\n**מקום התכנית:**  \nמחוז: דרום\n\n(המשך…)\n\n**נתן אלנתן**  \n**יושב ראש המועצה הארצית לתכנון ולבנייה**  \nט’ בניסן התשפ\"ה (7 באפריל 2025)\n\n1. ס\"ח התשכ\"ה, עמ' 307; התשע\"ה, עמ' 212.\n\n### raw OCR output : {{ $json.body.ocr_output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        140,
+        1360
+      ],
+      "id": "27f180d2-3c56-40e9-bcc7-0708060f730f",
+      "name": "Generate Blended Article1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "id": "fd5527a9-d89b-446c-803e-1956f9a90ad1",
+      "name": "Return Cleaned Text",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1360
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clean-ocr-result",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f3d981a4-d77e-47d5-bcdd-a8f7aea4e476",
+      "name": "Clean OCR",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        1360
+      ],
+      "webhookId": "10ab4812-1af0-4110-a121-3d2cf868dafc"
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "projection": "full",
+        "listFilters": {
+          "endOffset": "",
+          "includeTrailingDelimiter": false
+        },
+        "requestOptions": {}
+      },
+      "id": "0672f801-5db5-45fd-a91d-c65270ee9b87",
+      "name": "Get GCS Object List2",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        400
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        400
+      ],
+      "id": "0400b369-184a-4ba3-8961-ea39ce795360",
+      "name": "PDF OCR Response Json2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ocr-text1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "65b7133e-72a2-442c-8e24-9e2c4e6aa4ef",
+      "name": "OCR Hook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        840
+      ],
+      "webhookId": "10ab4812-1af0-4110-a121-3d2cf868dafc"
+    },
+    {
+      "parameters": {
+        "url": "=https://vision.googleapis.com/v1/operations/{{ $json[\"$vars\"].ocr_operation_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-user-project",
+              "value": "radiant-mason-455819-q6"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        600
+      ],
+      "id": "b419ab05-f8b5-41a6-af6a-fae00f602343",
+      "name": "PDF OCR Status2",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "delete",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "objectName": "={{ $('PDF OCR Json File2').item.json.response_json_file[0] }}",
+        "getParameters": {},
+        "requestOptions": {}
+      },
+      "id": "ffbb2b9f-7c46-4e47-852f-b418fd1442a0",
+      "name": "Delete GCS OCR Json2",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        400
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function extractAllNames(data) {\n    return data\n      .map(item => item.json.name)\n      .filter(name => /^output.*\\.json$/i.test(name));\n}\n// Example usage:\nconst result = extractAllNames($input.all());\n\nreturn {json : {\"response_json_file\" : result}}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        400
+      ],
+      "id": "7f3463b8-3e5d-490c-915b-82a4d5c23e35",
+      "name": "PDF OCR Json File2"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nfunction extractText(jsondata)\n{\n    // Verify it's an array before using .map\n    if (Array.isArray(jsondata)) {\n        const concatenatedText = jsondata\n            .map(item => item.fullTextAnnotation?.text || '')\n            .join('\\n\\n');\n    \n      return concatenatedText;\n    \n    } else {\n      return null;\n    }\n}\n\nreturn {json : {\"text\" : extractText($input.first().json.data.responses)}}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2600,
+        400
+      ],
+      "id": "d3996031-2a4c-4b75-bdfa-3ed8e9f666f5",
+      "name": "PDF OCR Text2"
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "get",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "objectName": "={{ $json.response_json_file[0] }}",
+        "projection": "full",
+        "alt": "media",
+        "getParameters": {},
+        "encryptionHeaders": {},
+        "requestOptions": {}
+      },
+      "id": "b5b6478c-d486-46e8-bee0-b6800f1e63eb",
+      "name": "Download OCR Json File2",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        400
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d5cea72e-374c-48be-b013-9e251060a97f",
+              "leftValue": "={{ $('OCR Hook1').item.json.body.filename }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        520,
+        760
+      ],
+      "id": "4c79da9b-2993-4cc4-bbce-dd8c9f9de28d",
+      "name": "pdf condition2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e0a0c8a2-0309-4754-ab93-2e37ecc63c32",
+              "leftValue": "={{ $json.metadata.state }}",
+              "rightValue": "DONE",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1560,
+        600
+      ],
+      "id": "c4278011-ee2c-42b7-897a-ad8207dcc456",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfunction getOperationId(input) {\n    return input.substring(input.lastIndexOf('/') + 1);\n}\n\nconst operation_id = getOperationId($input.first().json.name);\n\nreturn {json : {\"operation_id\" : operation_id}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        600
+      ],
+      "id": "cbbe2279-0083-41ff-a33c-36554bf930e9",
+      "name": "Get Operation ID2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba7509f2-b067-4d69-a0fb-43665a6a6349",
+              "name": "$vars.ocr_operation_id",
+              "value": "={{ $json.operation_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        600
+      ],
+      "id": "b4387e53-5292-4239-95d3-14d2baa88ae6",
+      "name": "Set Operation ID2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba7509f2-b067-4d69-a0fb-43665a6a6349",
+              "name": "$vars.ocr_operation_id",
+              "value": "={{ $json.operation_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        620
+      ],
+      "id": "2a0aa7a9-c776-469b-ae4c-e3f9563d464f",
+      "name": "Reset Operation ID2"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('PDF OCR Text2').item.json.text }}",
+        "options": {}
+      },
+      "id": "afce1b58-e0a9-4cb0-9cc1-07ca5359122c",
+      "name": "Return PDF OCR Text3",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfunction getOperationId(input) {\n    return input.substring(input.lastIndexOf('/') + 1);\n}\n\nconst operation_id = getOperationId($input.first().json.name);\n\nreturn {json : {\"operation_id\" : operation_id}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        620
+      ],
+      "id": "18035b5f-5cd4-4531-bd5a-ce221e453171",
+      "name": "Get Operation Id again2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vision.googleapis.com/v1/files:asyncBatchAnnotate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-user-project",
+              "value": "radiant-mason-455819-q6"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\":[\n    {\n      \"inputConfig\": {\n        \"gcsSource\": {\n          \"uri\": \"{{ $vars.google_bucket }}{{ $('OCR Hook1').item.json.body.filename }}\"\n        },\n        \"mimeType\": \"application/pdf\"\n      },\n      \"features\": [\n        {\n          \"type\": \"DOCUMENT_TEXT_DETECTION\"\n        }\n      ],\n      \"outputConfig\": {\n          \"gcsDestination\": {\n          \"uri\": \"gs://ocr-upload-jerusalem-post/\"\n        },\n        \"batchSize\": 10\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        600
+      ],
+      "id": "efd61965-7780-4dcc-9c79-0cbf3ff5f779",
+      "name": "PDF OCR Request2",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "delete",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "objectName": "={{ $('OCR Hook1').first().json.body.filename }}",
+        "getParameters": {},
+        "requestOptions": {}
+      },
+      "id": "45e5b3b2-b43e-4f79-9db2-f77df6736e03",
+      "name": "Delete GCS Pdf File2",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        400
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Google Bucket Uploading failed \nRetry again.",
+        "options": {}
+      },
+      "id": "e13c5330-8dd0-4f53-a1b7-e89f72c13848",
+      "name": "Return PDF OCR Text4",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "create",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "objectName": "={{ $json.body.filename }}",
+        "createBinaryPropertyName": "file",
+        "createData": {},
+        "createQuery": {},
+        "encryptionHeaders": {},
+        "requestOptions": {}
+      },
+      "id": "77d06e00-9d99-46e8-b0df-8646ac266b98",
+      "name": "Upload to GCS2",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        180,
+        840
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('IMG OCR Request3').item.json.responses[0].fullTextAnnotation.text }}",
+        "options": {}
+      },
+      "id": "0e6a703f-5802-4675-a41a-41057db30259",
+      "name": "Return Img OCR3",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vision.googleapis.com/v1/images:annotate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-user-project",
+              "value": "radiant-mason-455819-q6"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"image\": {\n        \"source\": {\n          \"imageUri\": \"{{ $vars.google_bucket }}{{ $('OCR Hook1').item.json.body.filename }}\"\n        }\n       },\n       \"features\": [\n         {\n           \"type\": \"TEXT_DETECTION\"\n         }\n       ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        880
+      ],
+      "id": "bd9ea7bb-4144-48b1-81e2-df12dc0d29ec",
+      "name": "IMG OCR Request3",
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "delete",
+        "bucketName": "ocr-upload-jerusalem-post",
+        "objectName": "={{ $('OCR Hook1').item.json.body.filename }}",
+        "getParameters": {},
+        "requestOptions": {}
+      },
+      "id": "aafc7948-dd25-47ff-a77c-c928c02f1af9",
+      "name": "Delete GCS Image File1",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        880
+      ],
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "ZmOVUTFH7gcStTkj",
+          "name": "Google Cloud Storage account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -686,7 +1257,7 @@
       "main": [
         [
           {
-            "node": "Upload File",
+            "node": "Generate File Name",
             "type": "main",
             "index": 0
           }
@@ -806,11 +1377,263 @@
         ]
       ]
     },
-    "Upload File": {
+    "Generate File Name": {
       "main": [
         [
           {
             "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Blended Article1": {
+      "main": [
+        [
+          {
+            "node": "Return Cleaned Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean OCR": {
+      "main": [
+        [
+          {
+            "node": "Generate Blended Article1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get GCS Object List2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Json File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF OCR Response Json2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Text2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Hook1": {
+      "main": [
+        [
+          {
+            "node": "Upload to GCS2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF OCR Status2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete GCS OCR Json2": {
+      "main": [
+        [
+          {
+            "node": "Delete GCS Pdf File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF OCR Json File2": {
+      "main": [
+        [
+          {
+            "node": "Download OCR Json File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF OCR Text2": {
+      "main": [
+        [
+          {
+            "node": "Delete GCS OCR Json2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download OCR Json File2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Response Json2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdf condition2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IMG OCR Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Get GCS Object List2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Operation Id again2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Operation ID2": {
+      "main": [
+        [
+          {
+            "node": "Set Operation ID2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Operation ID2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Status2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reset Operation ID2": {
+      "main": [
+        [
+          {
+            "node": "PDF OCR Status2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Operation Id again2": {
+      "main": [
+        [
+          {
+            "node": "Reset Operation ID2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF OCR Request2": {
+      "main": [
+        [
+          {
+            "node": "Get Operation ID2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete GCS Pdf File2": {
+      "main": [
+        [
+          {
+            "node": "Return PDF OCR Text3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to GCS2": {
+      "main": [
+        [
+          {
+            "node": "pdf condition2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return PDF OCR Text4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMG OCR Request3": {
+      "main": [
+        [
+          {
+            "node": "Delete GCS Image File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete GCS Image File1": {
+      "main": [
+        [
+          {
+            "node": "Return Img OCR3",
             "type": "main",
             "index": 0
           }
@@ -822,7 +1645,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "ec5776b0-2d9f-41d0-8147-c96d42ae6576",
+  "versionId": "5c9cf288-9a82-4d22-9882-3dac5d7af74f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"

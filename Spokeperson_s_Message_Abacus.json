@@ -1,0 +1,439 @@
+{
+  "name": "Spokeperson's Message Abacus",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -100
+      ],
+      "id": "23d8b266-b4c9-4ffe-84e2-c16cc23ab297",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "מפעילת הרשת החשמלית, Red Electrica מצביעה על פעולת אקרים מפקיסטן שגרמו לשיבוש הרוחבי",
+        "options": {
+          "systemMessage": "=You are a helpfull assistant to provide the direct url.\nYour task is to find the article url in the Maariv (מעריב) website.\nThe content of the url must be the most relevant the input text. \n\nExample 1 : \nUser : The fire in the Jerusalem Hills has been declared under control.\nHelper : https://www.bhol.co.il/news/1693044\n\nExample 2 : \nUser : After top efforts: Control has been achieved over the large fire in the Judean Lowlands area.\nHelper : https://passportnews.co.il/article/196274\n\nExample 3 :\nUser : The fire in the Jerusalem Hills has been brought under control; a special team is investigating the circumstances surrounding the fire.\nHelper : https://www.calcalist.co.il/updates_news/article/h1ttx00ggel\n\nExample 4 :\nUser : After about 30 hours: The fire in the Judean Lowlands was brought under control.\nHelper : https://www.hidabroot.org/article/1209257\n\nExample 5 :\nUser : Following the huge fires: the active hotspots, the injured and the reinforcements on the way\nto help : https://www.israelhayom.co.il/news/local/article/17867907\n\nExample 6 :\nUser : After 31 hours: Control of the fire in the Jerusalem hills has been achieved.\nHelper : https://www.ynet.co.il/news/article/bkvh7fwlle\n\nExample 7 :\nUser : Fire and Rescue Commissioner: \"The fire - one of the most difficult events I remember\"\nHelper : https://www.kan.org.il/content/kan-news/local/live-895473/"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -1040,
+        -100
+      ],
+      "id": "270ec5a7-94ce-4bfe-b8fa-94ebc31fd902",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-website-content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -520,
+        400
+      ],
+      "id": "82ee5c99-4487-486c-807e-b06ca29ba33e",
+      "name": "Scrapping Hook1",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99b7bc08-432c-4a93-9921-e03e4dc64318",
+      "name": "Cut out the body2",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        -160,
+        -100
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "f99abcd2-13e6-490d-b0bd-e59e6a22218a",
+      "name": "Clean Content2",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        80,
+        -100
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content-extraction specialist.\n\nTask: from the raw HTML/text, keep ONLY the core article (title + body).  \n• Preserve all facts, numbers, dates and direct quotes.  \n• Remove ads, sidebars, navigation links, comments, “read more” blocks and social buttons.  \n• Strip every HTML tag and any inline CSS/JS snippets.  \n• Keep quotation marks; convert <blockquote> elements to plain text wrapped in quotes.  \n• If the publish date exists only in meta tags, prepend it in brackets at the start of BODY.  \n• Normalize Unicode punctuation (long dashes, curly quotes) to standard Hebrew typography.\n\nReturn plain text in two sections:\n\n### TITLE\n<clean headline from source>\n\n### BODY\n<clean body in neutral journalistic paragraphs> \n\nhere is the raw html/text : {{ $json.contentShort }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        400,
+        -100
+      ],
+      "id": "1e728391-3d54-42c7-8586-8b5f7a6c6b3c",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        140,
+        40
+      ],
+      "id": "c0658218-5e3e-4b81-b9c1-a6b32eccdc8f",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "a2b26423-68c0-41de-9e7f-3b32ac0718d6",
+      "name": "Scrap Website1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -340,
+        -100
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "# Extract Website Content and send it chatbot \n",
+        "height": 440,
+        "width": 1460,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        -240
+      ],
+      "id": "fae36e5e-3b0b-4f89-b066-9c941313fcf9",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        -260
+      ],
+      "id": "6c87cfdb-ef58-416b-9a60-2a12dc1ab00c",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "content": "## Get Spokeperson's Message Relevant Website Url\n\n",
+        "height": 440,
+        "width": 760,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1240,
+        -240
+      ],
+      "id": "84522b50-305a-4d7e-99cf-a264dbabd41f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1160,
+        60
+      ],
+      "id": "65fd2542-6236-47cc-8a49-1d369dbbc07b",
+      "name": "Get URL Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.abacus.ai/llm/chat",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer s2_6e3e2a9e5a4146ec8909ea110685f85f"
+            },
+            {
+              "name": "Content-Type",
+              "value": " application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"messages\": [\n      {\"role\": \"user\", \"content\": \"Hello!\"}\n    ],\n    \"model\": \"llama-2-70b-chat\",\n    \"maxTokens\": 50\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        400
+      ],
+      "id": "73d32602-d59d-4bb0-9db8-2e88c50b02df",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \ncurl -X POST \"https://api.abacus.ai/llm/chat\" \\\n  -H \"Authorization: Bearer <YOUR_API_KEY>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"messages\": [\n      {\"role\": \"user\", \"content\": \"Hello!\"}\n    ],\n    \"model\": \"llama-2-70b-chat\",\n    \"maxTokens\": 50\n  }'",
+        "height": 520,
+        "width": 700
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        340,
+        300
+      ],
+      "id": "f5b0e5a5-a4b6-4d3a-8e54-13f1e8cb8396",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://apps.abacus.ai/api/searchWebForLLM",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "s2_6e3e2a9e5a4146ec8909ea110685f85f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "queries",
+              "value": "Where is Waldo?"
+            },
+            {
+              "name": "maxResults",
+              "value": "3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        400
+      ],
+      "id": "8118a2a1-65c1-485b-824e-0575f7c7d7ff",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://apps.abacus.ai/api/fetchWebPage",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "s2_6e3e2a9e5a4146ec8909ea110685f85f"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "https://www.maariv.co.il/news/israel/article-1192599"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        600
+      ],
+      "id": "dc399786-54d9-4e0e-947c-632c2a24334a",
+      "name": "HTTP Request2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrapping Hook1": {
+      "main": [
+        []
+      ]
+    },
+    "Cut out the body2": {
+      "main": [
+        [
+          {
+            "node": "Clean Content2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website1": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Get URL Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "565cbf9e-a5ab-4fc1-a810-4eb9534ff865",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "pNnXRx6B5YUQ7KSl",
+  "tags": []
+}

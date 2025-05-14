@@ -1,0 +1,354 @@
+{
+  "name": "Test",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1340,
+        -460
+      ],
+      "id": "e8669d4c-fa8b-41e9-b0cc-49e6f110c0a4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "n8n-variables",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "75bc9978-cc29-4c85-a8e0-0fc4c8cf3c91",
+      "name": "Retrieve URLs",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -1060,
+        -460
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8b265a91-8ba7-4f98-8bb3-9342d2577fae",
+              "leftValue": "={{ $json['Radio Enabled'] }}",
+              "rightValue": "enabled",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -800,
+        -460
+      ],
+      "id": "c25b145a-610e-4e6c-9aec-c07b36515b31",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -300
+      ],
+      "id": "aeff5d1d-87aa-4ed1-b319-7ba38627b6d1",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -480
+      ],
+      "id": "9dbc5bbf-9a4b-4ea3-a383-2201de676d18",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "set-radio-enabled",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        -860
+      ],
+      "id": "7f8dcb09-2ee7-4bc3-b5a6-89a6f1cb2d67",
+      "name": "Webhook",
+      "webhookId": "f322aeee-e3f6-4099-9f2c-ac476e222a21"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "n8n-variables",
+          "mode": "name"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "9de4a163-b465-4bb2-b62b-6ac229df8b64",
+      "name": "Delete Radio Enabled",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -1080,
+        -860
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "n8n-variables",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Radio Enabled": "={{ $('Webhook').item.json.body.radio_enabled }}"
+          },
+          "matchingColumns": [
+            "Url"
+          ],
+          "schema": [
+            {
+              "id": "Radio Enabled",
+              "displayName": "Radio Enabled",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c225e8bd-3b82-4941-b59d-3ac3fac847ee",
+      "name": "Set Radio Enabled",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -800,
+        -880
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        -900
+      ],
+      "id": "b8554456-c2b7-41a6-8ae7-0db752ddecf2",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false\n}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        -720
+      ],
+      "id": "4948c013-a999-401c-b4f6-ffbba38db020",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Retrieve URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve URLs": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Delete Radio Enabled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Radio Enabled": {
+      "main": [
+        [
+          {
+            "node": "Set Radio Enabled",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Radio Enabled": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aca0011d-8f84-435e-9c35-b0b416b02beb",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "JwlhT07xsBI85MUu",
+  "tags": []
+}

@@ -1,0 +1,560 @@
+{
+  "name": "Create Link Article",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-link-article",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        -240
+      ],
+      "id": "f0f02180-0214-40ef-8802-a935757b7122",
+      "name": "Webhook",
+      "webhookId": "175f7852-c13d-43c9-8878-2fa964f68c1a"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ca8ede27-2c8f-4ea7-9fc8-c1defe028678",
+              "leftValue": "={{ $json.body.url }}",
+              "rightValue": "youtube",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "9a643f9f-7e95-4d78-8e04-0e292dd62243",
+              "leftValue": "={{ $json.body.url }}",
+              "rightValue": "youtu.be",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -460,
+        -240
+      ],
+      "id": "b1a956f2-e1c5-4d19-a3bc-d8a354a6badc",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Instructions for the Assistant:\n\nWhen a user provides a YouTube video link, format the link into the endpoint structure without adding any extra words, symbols, or content. Ensure the resulting response contains only the properly formatted endpoint with the video URL encoded and the chunkSize parameter set to 500. Do not include any explanations, introductions, or additional comments.\n\nExample 1:\n\t•\tUser: Provide the transcript for https://youtu.be/QNSJbKQLElM\n\t•\tAssistant: https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https%3A%2F%2Fyoutu.be%2FQNSJbKQLElM&chunkSize=500\n\nExample 2:\n\t•\tUser: Transcript link for https://youtu.be/dQw4w9WgXcQ\n\t•\tAssistant: https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ&chunkSize=500\n\nExample 3:\n\t•\tUser: https://youtu.be/3JZ_D3ELwOQ Get the transcript\n\t•\tAssistant: https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https%3A%2F%2Fyoutu.be%2F3JZ_D3ELwOQ&chunkSize=500\n\nExample 4:\n\t•\tUser: I need the transcript for https://youtu.be/tgbNymZ7vqY\n\t•\tAssistant: https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https%3A%2F%2Fyoutu.be%2FtgbNymZ7vqY&chunkSize=500\n\nExample 5:\n\t•\tUser: Can you generate a transcript for https://youtu.be/L_jWHffIx5E?\n\t•\tAssistant: https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https%3A%2F%2Fyoutu.be%2FL_jWHffIx5E&chunkSize=500",
+              "role": "system"
+            },
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2660,
+        -540
+      ],
+      "id": "60279421-2f31-409d-9ff1-413d86df0018",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://188.34.176.33/audio/translation",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "audio_url",
+              "value": "={{ $json.body.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        -460
+      ],
+      "id": "d1c9ac6d-422d-4859-80bf-b3e95248e775",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f7781e2c-2e90-4e3b-8cc0-996d0e0f6e5a",
+      "name": "Cut out the body1",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        20,
+        -80
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "d5421795-ba55-48fb-a8bf-c25d2d368c7c",
+      "name": "Clean Content1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        180,
+        -80
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content-extraction specialist.\n\nTask: from the raw HTML/text, keep ONLY the core article (title + body).  \n• Preserve all facts, numbers, dates and direct quotes.  \n• Remove ads, sidebars, navigation links, comments, “read more” blocks and social buttons.  \n• Strip every HTML tag and any inline CSS/JS snippets.  \n• Keep quotation marks; convert <blockquote> elements to plain text wrapped in quotes.  \n• If the publish date exists only in meta tags, prepend it in brackets at the start of BODY.  \n• Normalize Unicode punctuation (long dashes, curly quotes) to standard Hebrew typography.\n\nReturn plain text in two sections:\n\n### TITLE\n<clean headline from source>\n\n### BODY\n<clean body in neutral journalistic paragraphs> \n\nhere is the raw html/text : {{ $json.contentShort }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        360,
+        -80
+      ],
+      "id": "b9fbad2c-9ed7-4ebb-b006-806c5b5128af",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        300,
+        100
+      ],
+      "id": "9abf22b0-a7bd-4e02-b25b-1cb611ff0cae",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "b8b2d86e-75a5-40cc-a152-857ee901d1f3",
+      "name": "Scrap Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -160,
+        -80
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Create a polished, engaging, and publication-ready journalism article based on the main text. Adhere to professional journalistic standards, ensuring accuracy, clarity, and readability.\n\nFollow these guidelines:\n\nHeadline: Craft a compelling headline under 60 characters, clearly summarizing the article.\n\nSub-headline: Write an informative sub-headline of up to 150 characters that expands on the headline.\n\nLead Paragraph: Begin the article with a concise, impactful summary that captures the main point or news value immediately.\n\nArticle Body: Develop a structured narrative between 350-400 words. Present information clearly, prioritizing the most critical facts first. Use short, coherent paragraphs (2–4 sentences each).\n\nQuotes & Sources: If quotes or sources are included, present them accurately, providing attribution clearly.\n\nStyle & Tone: Use an active voice, neutral tone, and maintain third-person perspective throughout.\n\nEnsure the final article is cohesive, precise, and ready for immediate publication.\n\n### Main Text:\n{{ $json.main_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1720,
+        -480
+      ],
+      "id": "e88ba60d-5058-42b5-a16f-c5f9b261c747",
+      "name": "Generate Link Article",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a professional journalist tasked with creating a comprehensive, engaging, and ready-to-publish news article based solely on the given main text. Use the provided background information only briefly to succinctly explain why the press statement was issued.\n\nImportant Rules:\nFocus primarily on the main text; it contains the new and central information.\nUse the background solely to give minimal context to readers about why the press statement was issued.\n\nHere is the information you must use:\n### Main Text:\n{{ $json.main_text }}\n\n### Background:\n{{ $('If').item.json.body.additional_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1740,
+        -100
+      ],
+      "id": "16953bc8-2115-49a5-aa68-8a724e480bfb",
+      "name": "Generate Link & Additional Info Article",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "aff48a66-1606-4a7d-a10a-b199f733284a",
+              "leftValue": "={{ $('If').item.json.body.additional_text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -280
+      ],
+      "id": "324342f6-4f52-4b2e-9297-bcf7bab66e28",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2260,
+        -320
+      ],
+      "id": "62be98ab-0b5f-4034-94f1-7217c72f06bc",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the global workflow static data\nconst workflowStaticData = $getWorkflowStaticData('node');\n\n// Update its data\nworkflowStaticData.mainText = $input.first().json.translation\n\n// Access main text\nconst mainText = workflowStaticData.mainText;\n\nreturn { json : {main_text : mainText }}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -460
+      ],
+      "id": "cc2fc801-865d-4956-ae67-132022d46000",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the global workflow static data\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// Update its data\nworkflowStaticData.mainText = $input.first().json.output\n\n// Access main text\nconst mainText = workflowStaticData.mainText;\n\nreturn { json : {main_text : mainText }}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -80
+      ],
+      "id": "d3e0bf24-2679-4b8f-8a8b-1a6a64966eed",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the global workflow static data\nconst workflowStaticData = $getWorkflowStaticData('global');\n\nworkflowStaticData.mainText = $input.first().json.main_text\n\n// Access main text\nconst mainText = workflowStaticData.mainText;\n\nreturn {json : {main_text : mainText}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        -280
+      ],
+      "id": "0ab417e5-3dd0-4222-8b3e-c73b13b81fc9",
+      "name": "Main Text"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scrap Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body1": {
+      "main": [
+        [
+          {
+            "node": "Clean Content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Generate Link Article",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Link & Additional Info Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Link Article": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Link & Additional Info Article": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Main Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Main Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main Text": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be9a4ff9-2296-440f-9098-bda61441351c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "q8cPPKwf0P3aVTcr",
+  "tags": []
+}

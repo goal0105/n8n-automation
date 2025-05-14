@@ -1,0 +1,493 @@
+{
+  "name": "E-Commerce Scrapping",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-ecommerce-content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        -100
+      ],
+      "id": "586118dd-b219-4511-8ae3-f78856ccf70f",
+      "name": "Scrapping Hook",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e657b1f2-296e-4c58-948c-e31f2e18142f",
+      "name": "Cut out the body1",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        400,
+        -100
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "5f0b4df9-a188-4cfa-a456-e9d32a732289",
+      "name": "Clean Content1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        620,
+        -100
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=אתה עוזר מומחה לחילוץ נתונים מאתרי מסחר אלקטרוני.\nמתוך תוכן דף האתר שאספק, חלץ מידע מלא וברור בעברית על כל המוצרים בקטגוריה הנתונה, בפורמט המסודר הבא:\n\nקטגוריה: [שם הקטגוריה בעברית]\n\n1.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n2.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n(המשך למספר לפי סדר כל המוצרים)\n\nהנחיות חשובות לחילוץ:\n- החלץ מידע בעברית בלבד.\n- אל תכלול מידע מקטגוריות אחרות, מלל שיווקי, מחירים או ביקורות.\n- אם חסר פרט כלשהו (כגון מק\"ט), ציין \"לא זמין\".\n- הקפד על פורמט ברור, נקי ונוח לשימוש.\n\nהנה תוכן דף האינטרנט : {{ $json.contentShort }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        820,
+        -100
+      ],
+      "id": "9491eca6-4f9b-45da-b48c-9b1cec673bb5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        100
+      ],
+      "id": "f9228567-196b-461f-9a6f-5f90ea75ceaf",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Scrapping Hook').item.json.body.url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "b58b6fa6-2b66-42d9-a026-8d3703b609e1",
+      "name": "Scrap Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        200,
+        -100
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "# Extract E-Commerce Website Content\n",
+        "height": 420,
+        "width": 1560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        -200
+      ],
+      "id": "cd2fa0f0-be1b-412c-a663-a165db7b949a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        -100
+      ],
+      "id": "d2654f2e-a235-4190-9540-8bb0e9682eae",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## English Prompt\nYou are an expert data extraction assistant specializing in e-commerce.\n\nGiven the provided webpage content, extract all products listed under the specific category provided. Return structured details clearly for each product, in this exact format : \n\nCategory: [Category Name]\n\n1.\nProduct Name: [Name]\nSKU: [SKU or Product ID]\nProduct Description: [Short, detailed description]\n\n2.\nProduct Name: [Name]\nSKU: [SKU or Product ID]\nProduct Description: [Short, detailed description]\n\n(continue numbering for all products found)\n\nExtraction Guidelines:\n\n- Category Name should match the provided category exactly.\n- Include every product listed clearly within the category.\n- Do NOT mix products from other categories.\n- If any data is missing, clearly mark as \"Not Available\".\n- Do not include promotional texts, prices, reviews, or extraneous content.\n- Maintain clear and organized formatting to easily transfer data.\n\nhere is the webpage content : {{ $json.contentShort }}.\n",
+        "height": 420,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        -200
+      ],
+      "id": "aae7bfd2-4baa-491c-b318-fd59811274ed",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Hebrew Prompt\n\nאתה עוזר מומחה לחילוץ נתונים מאתרי מסחר אלקטרוני.\nמתוך תוכן דף האתר שאספק, חלץ מידע מלא וברור בעברית על כל המוצרים בקטגוריה הנתונה, בפורמט המסודר הבא:\n\nקטגוריה: [שם הקטגוריה בעברית]\n\n1.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n2.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n(המשך למספר לפי סדר כל המוצרים)\n\nהנחיות חשובות לחילוץ:\n- החלץ מידע בעברית בלבד.\n- אל תכלול מידע מקטגוריות אחרות, מלל שיווקי, מחירים או ביקורות.\n- אם חסר פרט כלשהו (כגון מק\"ט), ציין \"לא זמין\".\n- הקפד על פורמט ברור, נקי ונוח לשימוש.\n",
+        "height": 420,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -200
+      ],
+      "id": "30134029-6185-441f-8dd8-d62354e07b3d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html",
+              "returnValue": "html"
+            }
+          ]
+        },
+        "options": {
+          "trimValues": true
+        }
+      },
+      "id": "167e0c18-3530-4a08-80c4-071251aff452",
+      "name": "Cut out the body",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        1200,
+        400
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "=https://www.semicom.co.il/appliances/kitchen-appliances",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "92868eb8-c02c-4df0-9776-a2c58484fa3e",
+      "name": "Scrap Website1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        180,
+        400
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        600
+      ],
+      "id": "24360139-0424-4424-90e4-618fc176d854",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You will receive text content from an e-commerce webpage in Hebrew. Your task is to accurately extract all product details in Hebrew, formatted strictly in JSON.\n\nInclude the following fields:\n• product_name (שם המוצר)  \n• SKU (מק\"ט)\n• product_description (תיאור המוצר)  \n• product_image_url (קישור לתמונת המוצר)\n\nInstructions:\n\n1. Provide the output exclusively as valid JSON array of objects.\n2. Ensure text accuracy in Hebrew.\n3. If any field (e.g., SKU) is unavailable, clearly mark it as \"N/A\".\n4. Validate that image URLs are complete and accessible.\n\nExample JSON Output:\n[\n    {\n        \"product_name\": \"שם המוצר לדוגמה\",\n        \"SKU\": \"12345\",\n        \"product_description\": \"תיאור מפורט של המוצר בעברית\",\n        \"product_image_url\": \"https://example.com/image.jpg\"\n    },\n    {\n        \"product_name\": \"מוצר נוסף\",\n        \"SKU\": \"N/A\",\n        \"product_description\": \"תיאור מפורט של המוצר השני\",\n        \"product_image_url\": \"https://example.com/image2.jpg\"\n    }\n]\n\nHere is the e-commerce webpage content : {{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        440,
+        400
+      ],
+      "id": "f36c7118-eb80-41ab-a1be-6b494289aa65",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        380,
+        600
+      ],
+      "id": "85193b20-22c2-4b40-a8b5-7cb1c540f72b",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Prompt:\n\nYou will receive text content from an e-commerce webpage in Hebrew. Your task is to accurately extract all product details in Hebrew, formatted strictly in JSON.\n\nInclude the following fields:\n• product_name (שם המוצר)  \n• SKU (מק\"ט)\n• product_description (תיאור המוצר)  \n• product_image_url (קישור לתמונת המוצר)\n\nInstructions:\n\n1. Provide the output exclusively as valid JSON array of objects.\n2. Ensure text accuracy in Hebrew.\n3. If any field (e.g., SKU) is unavailable, clearly mark it as \"N/A\".\n4. Validate that image URLs are complete and accessible.\n\nExample JSON Output:\n[\n    {\n        \"product_name\": \"שם המוצר לדוגמה\",\n        \"SKU\": \"12345\",\n        \"product_description\": \"תיאור מפורט של המוצר בעברית\",\n        \"product_image_url\": \"https://example.com/image.jpg\"\n    },\n    {\n        \"product_name\": \"מוצר נוסף\",\n        \"SKU\": \"N/A\",\n        \"product_description\": \"תיאור מפורט של המוצר השני\",\n        \"product_image_url\": \"https://example.com/image2.jpg\"\n    }\n]",
+        "height": 420,
+        "width": 680
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        -200
+      ],
+      "id": "27ee966b-86ec-4f4c-a899-6b261618a594",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Hebrew Prompt\n\nאתה עוזר מומחה לחילוץ נתונים מאתרי מסחר אלקטרוני.\nמתוך תוכן דף האתר שאספק, חלץ מידע מלא וברור בעברית על כל המוצרים בקטגוריה הנתונה, בפורמט המסודר הבא:\n\nקטגוריה: [שם הקטגוריה בעברית]\n\n1.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n2.\nשם המוצר: [שם המוצר בעברית]\nמק\"ט (SKU): [המק\"ט או קוד הזיהוי]\nתיאור המוצר: [תיאור קצר, מפורט ומדויק בעברית בלבד]\n\n(המשך למספר לפי סדר כל המוצרים)\n\nהנחיות חשובות לחילוץ:\n- החלץ מידע בעברית בלבד.\n- אל תכלול מידע מקטגוריות אחרות, מלל שיווקי, מחירים או ביקורות.\n- אם חסר פרט כלשהו (כגון מק\"ט), ציין \"לא זמין\".\n- הקפד על פורמט ברור, נקי ונוח לשימוש.\n",
+        "height": 420,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        440
+      ],
+      "id": "eaf390fe-26dc-4d1e-b0cf-9ffde1801e21",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        400
+      ],
+      "id": "48f2d3ea-2d4a-4da3-855d-ac5f0ed1f09b",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-ecommerce-content1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        400
+      ],
+      "id": "b652631e-5fe9-4678-a6cd-1883b2f87b6f",
+      "name": "Scrapping Hook1",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    }
+  ],
+  "pinData": {
+    "Cut out the body1": [
+      {
+        "json": {
+          "body": "C-Data. iPhone 15 256GB\n    \n    \n    \n    \n    \n    \n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n\n\n    \n\n\n\n\n                \n                \n\n    \n\n\n\n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n    \n\n    \n    \n    \n    \n    \n\n\n    \n\n\n\n\n                \n                    \n\n\n\n\n                \n                \n                    \n\n\n\n\n                \n                \n                    <iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-K2Q7WFP\"\nheight=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe>\n\n                \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n    \n\n\n\n\n    \n    \n        \n            \n                \n                    \n\n\n\n\n\n\n\n    \n        \n            Reseller Registration\n            Reseller Login\n\n\n        \n    \n\n\n                \n                \n                    \n                    \n\n    \n\n        שקל\nOriginale Currency\nUSD\n₪\n$\nEuro\n\n\n        \n    \n\n                    \n\n    \n            \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            \n                        \n                    \n            \n    \n\n                    \n                \n            \n                \n                    \n        \n        Search\n            \n            \n\n                \n        \n    \n    \n        \n            \n            \n\n            \n                \n                    \n                        Close\n                    \n\n\n\n\n    \n\n\n\n\n      TV & Home Theater\n\n        \n        \n            \n                \n                    Back\n                \n\n\n\n\n     Televisions\n\n\n\n\n\n\n\n     Sound Bar\n\n\n\n\n\n\n\n     Consoles\n\n\n\n\n\n\n\n     Streamers\n\n\n\n            \n        \n\n\n\n\n\n\n\n        Computers and Mobiles\n\n        \n            \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Computerization\n                        \n                            \n                                    \n                                        Notebooks\n                                    \n                                    \n                                        Desktops\n                                    \n                                    \n                                        All-in-One Computers\n                                    \n                                    \n                                        Professional Workstations\n                                    \n                                    \n                                        Computer Screens\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Gaming World\n                        \n                            \n                                    \n                                        Gaming Notebooks\n                                    \n                                    \n                                        Gaming Desktops\n                                    \n                                    \n                                        Gaming Monitors\n                                    \n                                    \n                                        Gaming Accessories\n                                    \n                                    \n                                        Gaming Graphic Cards\n                                    \n                                    \n                                        Consoles\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Cellular World\n                        \n                            \n                                    \n                                        Heaphones\n                                    \n                                    \n                                        Phones and Accessories\n                                    \n                                    \n                                        Tablets and Accessories\n                                    \n                                    \n                                        Smart Watches and Accessories\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Printers and Scanners\n                        \n                            \n                                    \n                                        Laser Printers\n                                    \n                                    \n                                        Ink Printers\n                                    \n                                    \n                                        Scanners\n                                    \n                                    \n                                        Plotters\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Peripheral Equipment\n                        \n                            \n                                    \n                                        UPS Solutions\n                                    \n                                    \n                                        Keyboard and Mouse Set\n                                    \n                                    \n                                        Docking Stations, Charges and Connections\n                                    \n                                    \n                                        Webcams\n                                    \n                                    \n                                        Audio\n                                    \n                                    \n                                        Notebooks Cases and Sleeves\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Softwares\n                        \n                            \n                                    \n                                        Office\n                                    \n                                    \n                                        Windows\n                                    \n                                    \n                                        Online Software Download\n                                    \n                                    \n                                        Retail Software\n                                    \n                                    \n                                        Windows Server\n                                    \n                                    \n                                        Cloud Environment - Presentations & Tutorials\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Graphic Cards\n                        \n                            \n                                    \n                                        NVIDIA Tesla\n                                    \n                                    \n                                        NVIDIA Quadro\n                                    \n                                    \n                                        Nvidia RTX Gaming\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Photography\n                        \n                            \n                                    \n                                        Cameras\n                                    \n                                    \n                                        Lenses\n                                    \n\n                            \n                    \n                \n            \n        \n\n\n\n\n\n        Business Solutions\n\n        \n            \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Servers\n                        \n                            \n                                    \n                                        DELL Technologies Servers\n                                    \n                                    \n                                        NVIDIA DGX Servers\n                                    \n                                    \n                                        HPE Servers\n                                    \n                                    \n                                        DELL Technologies  Server Accessories\n                                    \n                                    \n                                        HPE Server Accessories\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Storages\n                        \n                            \n                                    \n                                        ASUSTOR\n                                    \n                                    \n                                        Dell Technologies\n                                    \n                                    \n                                        HPE\n                                    \n                                    \n                                        CTERA\n                                    \n                                    \n                                        IBM\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            APC - UPS\n                        \n                            \n                                    \n                                        UPS Solutions\n                                    \n                                    \n                                        Servers Cabinets and Accessories\n                                    \n                                    \n                                        Tools and Selectors\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Communication\n                        \n                            \n                                    \n                                        Switches, Adapters and Plug-ins\n                                    \n                                    \n                                        Wireless Access Points and Accessories\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Softwares\n                        \n                            \n                                    \n                                        Splunk\n                                    \n                                    \n                                        SUSE\n                                    \n                                    \n                                        VMWARE\n                                    \n                                    \n                                        VEEAM Backup & Replication\n                                    \n                                    \n                                        IBM\n                                    \n                                    \n                                        HYCU\n                                    \n                                    \n                                        Scality\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            HCI Solutions\n                        \n                            \n                                    \n                                        NUTANIX\n                                    \n                                    \n                                        Dell Technologies\n                                    \n                                    \n                                        HPE\n                                    \n                                    \n                                        CTERA\n                                    \n                                    \n                                        Vmware\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Corporate Security\n                        \n                    \n                \n            \n        \n\n\n\n\n\n        Data Security\n\n        \n            \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Check Point\n                        \n                            \n                                    \n                                        Security Gateway Appliances\n                                    \n                                    \n                                        Mobile Security\n                                    \n                                    \n                                        Cloud Security\n                                    \n                                    \n                                        Endpoint Security\n                                    \n\n                            \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            F5\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Thales\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Trellix\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Minerva\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Vade\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            IBM\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            ARISTA\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            Fortinet\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            odix\n                        \n                    \n                \n                    \n                        \n                            \n                        \n                    \n                    \n                        \n                            NGINX\n                        \n                    \n                \n            \n        \n\n\n\n\n     Vendors\n\n        \n        \n            \n                \n                    Back\n                \n\n\n\n\n     Apple\n\n\n\n\n\n\n\n     APC\n\n\n\n\n\n\n\n     ARISTA\n\n\n\n\n\n\n\n     Aruba\n\n\n\n\n\n\n\n     ASUS\n\n\n\n\n\n\n\n     ASUSTOR\n\n\n\n\n\n\n\n     Check Point\n\n\n\n\n\n\n\n     Ctera\n\n\n\n\n\n\n\n     DELL\n\n\n\n\n\n\n\n     F5\n\n\n\n\n\n\n\n     HP\n\n\n\n\n\n\n\n     HPE\n\n\n\n\n\n\n\n     HYCU\n\n\n\n\n\n\n\n     IBM\n\n\n\n\n\n\n\n     Microsoft\n\n\n\n\n\n\n\n     Minerva\n\n\n\n\n\n\n\n     Nginx\n\n\n\n\n\n\n\n     Nutanix\n\n\n\n\n\n\n\n     NVIDIA\n\n\n\n\n\n\n\n     odix\n\n\n\n\n\n\n\n     Scality\n\n\n\n\n\n\n\n     Splunk\n\n\n\n\n\n\n\n     SUSE\n\n\n\n\n\n\n\n     Targus\n\n\n\n\n\n\n\n     TCL\n\n\n\n\n\n\n\n     THALES\n\n\n\n\n\n\n\n     Trellix\n\n\n\n\n\n\n\n     Vade\n\n\n\n\n\n\n\n     Veeam\n\n\n\n\n\n\n\n     VMware\n\n\n\n            \n        \n\n\n\n        \n    \n    Menu\n    \n\n\n\n\n      TV & Home Theater\n\n        \n        \n            \n                \n                    Back\n                \n\n\n\n\n     Televisions\n\n\n\n\n\n\n\n     Sound Bar\n\n\n\n\n\n\n\n     Consoles\n\n\n\n\n\n\n\n     Streamers\n\n\n\n            \n        \n\n\n\n\n\n\n        Computers and Mobiles\n\n        \n        \n            \n                \n                    Back\n                \n                \n        \n            Computerization\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Notebooks\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ASUS\n        \n        \n            HP\n        \n        \n            DELL\n        \n        \n            Apple\n        \n\n\n                \n            \n        \n        \n            Desktops\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            DELL\n        \n        \n            HP\n        \n        \n            ASUS\n        \n        \n            Apple\n        \n\n\n                \n            \n        \n        \n            All-in-One Computers\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ASUS\n        \n        \n            DELL\n        \n        \n            HP\n        \n        \n            Apple\n        \n\n\n                \n            \n        \n        \n            Professional Workstations\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            DELL\n        \n        \n            HP\n        \n\n\n                \n            \n        \n        \n            Computer Screens\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            HP\n        \n        \n            APPLE\n        \n        \n            ASUS\n        \n        \n            TCL\n        \n        \n            DELL\n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n        \n            Gaming World\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Gaming Notebooks\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ASUS\n        \n        \n            HP\n        \n        \n            DELL\n        \n\n\n                \n            \n        \n        \n            Gaming Desktops\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            HP\n        \n        \n            ASUS\n        \n        \n            DELL\n        \n\n\n                \n            \n        \n        \n            Gaming Monitors\n        \n        \n            Gaming Accessories\n        \n        \n            Gaming Graphic Cards\n        \n        \n            Consoles\n        \n\n\n                \n            \n        \n        \n            Cellular World\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Heaphones\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            AirPods\n        \n        \n            Beats by Dre\n        \n\n\n                \n            \n        \n        \n            Phones and Accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            iPhone 16e\n        \n        \n            iPhone 16 Pro\n        \n        \n            iPhone 16\n        \n        \n            iPhone 15 Plus\n        \n        \n            iPhone 15\n        \n        \n            iPhone 13\n        \n        \n            iPhone SE 3rd Gen\n        \n        \n            Mobile and tablet accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            כיסויים לסלולר\n        \n        \n            כבלים ומטענים\n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n        \n            Tablets and Accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            iPad Mini\n        \n        \n            iPad Pro\n        \n        \n            iPad\n        \n        \n            iPad Air\n        \n        \n            Accessories for Tablets\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Cables and Charges\n        \n        \n            Tablet Covers\n        \n        \n            Keyboards and Pencils\n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n        \n            Smart Watches and Accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Apple Watch Series 10\n        \n        \n            Apple Watch Series Ultra 2\n        \n        \n            Apple Watch Series 9\n        \n        \n            Apple Watch Series SE\n        \n        \n            Apple Watch Series 7\n        \n        \n            Accessories for Watches\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Watch Bands\n        \n        \n            Cables and Charges\n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n        \n            Printers and Scanners\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Laser Printers\n        \n        \n            Ink Printers\n        \n        \n            Scanners\n        \n        \n            Plotters\n        \n\n\n                \n            \n        \n        \n            Peripheral Equipment\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            UPS Solutions\n        \n        \n            Keyboard and Mouse Set\n        \n        \n            Docking Stations, Charges and Connections\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ASUS\n        \n        \n            DELL\n        \n        \n            HP\n        \n        \n            Microsoft\n        \n        \n            Apple\n        \n        \n            Espresso\n        \n\n\n                \n            \n        \n        \n            Webcams\n        \n        \n            Audio\n        \n        \n            Notebooks Cases and Sleeves\n        \n\n\n                \n            \n        \n        \n            Softwares\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Office\n        \n        \n            Windows\n        \n        \n            Online Software Download\n        \n        \n            Retail Software\n        \n        \n            Windows Server\n        \n        \n            Cloud Environment - Presentations & Tutorials\n        \n\n\n                \n            \n        \n        \n            Graphic Cards\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            NVIDIA Tesla\n        \n        \n            NVIDIA Quadro\n        \n        \n            Nvidia RTX Gaming\n        \n\n\n                \n            \n        \n        \n            Photography\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Cameras\n        \n        \n            Lenses\n        \n\n\n                \n            \n        \n\n            \n        \n\n\n\n\n\n        Business Solutions\n\n        \n        \n            \n                \n                    Back\n                \n                \n        \n            Servers\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            DELL Technologies Servers\n        \n        \n            NVIDIA DGX Servers\n        \n        \n            HPE Servers\n        \n        \n            DELL Technologies  Server Accessories\n        \n        \n            HPE Server Accessories\n        \n\n\n                \n            \n        \n        \n            Storages\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ASUSTOR\n        \n        \n            Dell Technologies\n        \n        \n            HPE\n        \n        \n            CTERA\n        \n        \n            IBM\n        \n\n\n                \n            \n        \n        \n            APC - UPS\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            UPS Solutions\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            UPS \n        \n\n\n                \n            \n        \n        \n            Servers Cabinets and Accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Server Cabinet\n        \n        \n            Server Cabinet Accessories\n        \n\n\n                \n            \n        \n        \n            Tools and Selectors\n        \n\n\n                \n            \n        \n        \n            Communication\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Switches, Adapters and Plug-ins\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Dell Technologies\n        \n        \n            HPE\n        \n        \n            ARUBA\n        \n        \n            ARISTA\n        \n\n\n                \n            \n        \n        \n            Wireless Access Points and Accessories\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            ARISTA\n        \n        \n            ARUBA\n        \n\n\n                \n            \n        \n\n\n                \n            \n        \n        \n            Softwares\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Splunk\n        \n        \n            SUSE\n        \n        \n            VMWARE\n        \n        \n            VEEAM Backup & Replication\n        \n        \n            IBM\n        \n        \n            HYCU\n        \n        \n            Scality\n        \n\n\n                \n            \n        \n        \n            HCI Solutions\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            NUTANIX\n        \n        \n            Dell Technologies\n        \n        \n            HPE\n        \n        \n            CTERA\n        \n        \n            Vmware\n        \n\n\n                \n            \n        \n        \n            Corporate Security\n        \n\n            \n        \n\n\n\n\n\n        Data Security\n\n        \n        \n            \n                \n                    Back\n                \n                \n        \n            Check Point\n            \n            \n                \n                    \n                        Back\n                    \n                    \n        \n            Security Gateway Appliances\n        \n        \n            Mobile Security\n        \n        \n            Cloud Security\n        \n        \n            Endpoint Security\n        \n\n\n                \n            \n        \n        \n            F5\n        \n        \n            Thales\n        \n        \n            Trellix\n        \n        \n            Minerva\n        \n        \n            Vade\n        \n        \n            IBM\n        \n        \n            ARISTA\n        \n        \n            Fortinet\n        \n        \n            odix\n        \n        \n            NGINX\n        \n\n            \n        \n\n\n\n\n\n     Vendors\n\n        \n        \n            \n                \n                    Back\n                \n\n\n\n\n     Apple\n\n\n\n\n\n\n\n     APC\n\n\n\n\n\n\n\n     ARISTA\n\n\n\n\n\n\n\n     Aruba\n\n\n\n\n\n\n\n     ASUS\n\n\n\n\n\n\n\n     ASUSTOR\n\n\n\n\n\n\n\n     Check Point\n\n\n\n\n\n\n\n     Ctera\n\n\n\n\n\n\n\n     DELL\n\n\n\n\n\n\n\n     F5\n\n\n\n\n\n\n\n     HP\n\n\n\n\n\n\n\n     HPE\n\n\n\n\n\n\n\n     HYCU\n\n\n\n\n\n\n\n     IBM\n\n\n\n\n\n\n\n     Microsoft\n\n\n\n\n\n\n\n     Minerva\n\n\n\n\n\n\n\n     Nginx\n\n\n\n\n\n\n\n     Nutanix\n\n\n\n\n\n\n\n     NVIDIA\n\n\n\n\n\n\n\n     odix\n\n\n\n\n\n\n\n     Scality\n\n\n\n\n\n\n\n     Splunk\n\n\n\n\n\n\n\n     SUSE\n\n\n\n\n\n\n\n     Targus\n\n\n\n\n\n\n\n     TCL\n\n\n\n\n\n\n\n     THALES\n\n\n\n\n\n\n\n     Trellix\n\n\n\n\n\n\n\n     Vade\n\n\n\n\n\n\n\n     Veeam\n\n\n\n\n\n\n\n     VMware\n\n\n\n            \n        \n\n\n\n        \n    \n                \n            \n\n\n\n\n\n\n\n    \n\n\n\n    \n\n\n        \n    \n\n\n\n    \n    \n    \n        \n            \n                Menu\n            \n            \n                Search\n            \n            \n                Filters\n            \n            \n                Personal menu\n            \n        \n    \n    \n        \n\n\n\n\n        \n            \n\n        \n            \n                \n                \n                    \n                        \n                            Home\n                        \n                    \n                    /\n                \n                    \n                        \n                            Computers and Mobiles\n                        \n                        /\n                        \n                    \n                    \n                        \n                            Cellular World\n                        \n                        /\n                        \n                    \n                    \n                        \n                            Phones and Accessories\n                        \n                        /\n                        \n                    \n                    \n                        \n                            iPhone 15\n                        \n                        /\n                        \n                    \n                \n                \n                    iPhone 15 256GB\n                    \n                    \n                    \n                    \n                \n            \n    \n\n\n\n\n    \n    \n\n\n\n    \n        \n\n                \n                    \n\n\n                \n\n        \n\n\n\n\n\n    \n    \n    \n    \n    \n    \n        \n    \n        \n        \n        \n        \n        \n    \n    \n        \n        \n    \n\n            \n                \n                    iPhone 15 256GB\n                    \n    \n        Previous productiPhone 15 128GB\n    \n\n    \n        Next productiPhone 15 512GB\n    \n\n                \n                \n                    \n\n\n\n\n        \n    \n        \n    \n        \n        \n            \n                \n                    \n                \n            \n            * Pictures shown are for illustration purpose only\n\n        \n            \n                    \n\n\n                            \n                                \n                                    \n                                \n                            \n                            \n                                \n                                    \n                                \n                            \n                            \n                                \n                                    \n                                \n                            \n                            \n                                \n                                    \n                                \n                            \n                            \n                                \n                                    \n                                \n                            \n                            \n                                \n                                    \n                                \n                            \n\n                            \n                                \n                                    \n\n                                            \n                                                \n                                \n                            \n\n                    \n                    \n            \n        \n    \n                    \n                        \n                            \n        \n            \n                \n                \n            \n        \n\n            \n                Be the first to review this product\n            \n    \n\n\n                        \n                            \n                                iPhone 15 256GB\n                            \n\n\n\n                        \n                        \n                            \n            Manufacturer:\n        \n                Apple\n        \n    \n\n                        \n                        \n                        \n                        \n        \n            SKU:\n            MTP63HX/A\n        \n\n                        \n                        \n                        \n    \n        \n                \n                    \n                        \n                            צבע לבחירה\n                        \n                            *\n                    \n                    \n                                \n\t\t                                \n\t\t                                    \n\t                                            \n\t                                                 \n\t                                            \n\t\t                                        \n\t\t                                    \n                                            \n                                                Not available\n                                            \n\t\t                                \n\t\t                                \n\t\t                                    \n\t                                            \n\t                                                 \n\t                                            \n\t\t                                        \n\t\t                                    \n                                            \n                                                Not available\n                                            \n\t\t                                \n\t\t                                \n\t\t                                    \n\t                                            \n\t                                                 \n\t                                            \n\t\t                                        \n\t\t                                    \n                                            \n                                                Not available\n                                            \n\t\t                                \n\t\t                                \n\t\t                                    \n\t                                            \n\t                                                 \n\t                                            \n\t\t                                        \n\t\t                                    \n                                            \n                                                Not available\n                                            \n\t\t                                \n\t\t                                \n\t\t                                    \n\t                                            \n\t                                                 \n\t                                            \n\t\t                                        \n\t\t                                    \n                                            \n                                                Not available\n                                            \n\t\t                                \n\t\t                        \n                                \n                    \n                \n        \n        \n    \n        \n                        \n                        \n                            \n                                \n        Add to compare list\n    \n\n                            \n                            \n                            \n                            \n                        \n                        \n                        \n                        \n    \n            \n                \n                    \n                \n            \n    \n                        \n\n                        \n\n\n                    \n                        \n                            קישור לנתוני יצרן\n\nצבעים ומקטים לבחירה:צבע Black - מק\"ט MTP63HX/Aצבע Pink - מק\"ט MTP73HX/Aצבע Yellow - מק\"ט MTP83HX/Aצבע Blue - מק\"ט MTP93HX/Aצבע Green - מק\"ט MTPA3HX/A\n                        \n                    \n                \n                \n    \n\n    \n        \n\n    \n            \n                Specifications\n            \n            \n                Overview\n            \n    \n\n\n        \n            \n\n\n    \n        \n            Products specifications\n        \n        \n            \n                \n                    \n                        Attribute name\n                        Attribute value\n                    \n                \n                \n                                \n                                    \n                                        Model\n                                    \n                                    \niPhone 15                                    \n                                \n                                \n                                    \n                                        SKU\n                                    \n                                    \nצבעים ומקטים לבחירה:צבע Black - מק\"ט MTP63HX/Aצבע Pink - מק\"ט MTP73HX/Aצבע Yellow - מק\"ט MTP83HX/Aצבע Blue - מק\"ט MTP93HX/Aצבע Green - מק\"ט MTPA3HX/A                                    \n                                \n                                \n                                    \n                                        Storage\n                                    \n                                    \n256GB                                    \n                                \n                                \n                                    \n                                        Screen Size\n                                    \n                                    \n\"6.1 OLED                                    \n                                \n                                \n                                    \n                                        Display Resolution\n                                    \n                                    \n2556x1179                                    \n                                \n                                \n                                    \n                                        Chipset\n                                    \n                                    \nA16 Bionicיחידת עיבוד מרכזית בעלת 6 ליבותיחידת עיבוד גרפי בעלת 5 ליבותמנוע נוירוני (עצבי) בעל 16 ליבות                                    \n                                \n                                \n                                    \n                                        Rear Camera (main)\n                                    \n                                    \nמצלמה עיקרית 48MP:26 מ״מ מפתח צמצם ƒ/1.6, ייצוב תמונה אופטי מבוסס חיישן נע בעל שני ציריתנועה, 100% Focus Pixels (מיקוד תוך שימוש במידע מכלל הפיקסלים),תמיכה בתמונות ברזולוציה גבוהה במיוחד (24MP ו-48MP).מצלמת 12MP רחבה במיוחד:13מ״מ, מפתח צמצם ƒ/2.4 ושדה ראייה של  120מעלות, 100% Focus Pixels.מצלמת 12MP טלפוטו פי 2 (מאופשרת על ידי חיישן ייעודי):52 מ״מ מפתח צמצם ƒ/1.6, ייצוב תמונה אופטי מבוסס חיישן נע בעל שני צירי תנועה, 100% Focus Pixels.התקרבות (zoom in) אופטית 2xהתרחקות (zoom out) אופטית 2xטווח התקרבות-התרחקות אופטית 4xהתקרבות (zoom in) דיגיטלית עד 10xכיסוי עדשות מקריסטל ספירמבזק (פלאש) True Toneמערכת עיבוד תמונה Photonic Engineמערכת עיבוד תמונה Deep FusionSmart HDR 5צילומי פורטרט של הדור הבא עם מיקוד ובקרת עומקתאורה לצילום פורטרט עם 6 אפקטיםמצב צילום לילהצילום פנורמי (עד 63MP)סגנונות צילוםלכידת צבעים בטווח רחב בצילום תמונות דוממות ותמונות חיותתיקון עיוות עדשות (מצלמה רחבה במיוחד)תיקון עיניים אדומות מתקדםייצוב תמונה אוטומטיצילום פרץ תמונותתיוג מיקום גיאוגרפי לתמונותפורמטים לשמירת תמונות : HEIFו-JPE\nהקלטת וידאו:הקלטת וידאו 4K בקצב של 30 ,25 ,24 או 60 תמוניות/שניההקלטת וידאו 1080p HD בקצב של  30 ,25 או 60 תמוניות/שניההקלטת וידאו 720p HD בקצב של 30 תמוניות/שניהמצב צילום קולנועי עד איכות של  4K HDR בקצב של 30תמוניות/שניהמצב צילום פעילות עד איכות של  2.8K בקצב של 60 תמוניות/שניההקלטת וידאו HDR עם Dolby Vision עד לאיכות 4K בקצב של 60 תמוניות/שניהצילום וידאו בהילוך איטי באיכות 1080p בקצב של 120 או 240 תמוניות/שניהצילום וידאו בהילוך מהיר (Time lapse) עם ייצובצילום בהילוך מהיר (Time lapse) במצב צילום לילהמעבר בזק מצילום תמונות לצילום וידאו (QuickTake video)ייצוב תמונה אופטי מבוסס חיישן נע בעל שני צירי תנועה (מצלמה עיקרית)התקרבות (zoom in) דיגיטלית עד 6xהקלטת שמע דינמית שמאפשרת את בחירת הכיוון הרצוי להקלטה ומחלישה את הצלילים המגיעים מכיוונים אחרים בהתאם להתקרבות למושא הצילום (Audio zoom)מבזק (פלאש) True Toneייצוב וידאו קולנועי 1080p ,4Kו-720pמיקוד אוטומטי מתמשך בצילום וידאושמירת תמונות דוממות  8מגה-פיקסל תוך כדי הקלטת וידאו 4Kהתקרבות/התרחקות (zoom) בעת ניגון וידאופורמטים לשמירת וידאו : HEVCו-H.264הקלטת שמע בסטריאו                                    \n                                \n                                \n                                    \n                                        Front Camera (selfie)\n                                    \n                                    \nמצלמת 12MPמפתח צמצם ƒ/1.9מיקוד אוטומטי עם Focus PixelsRetina מבזקמערכת עיבוד תמונה Photonic Engineמערכת עיבוד תמונה Deep FusionSmart HDR 5צילומי פורטרט של הדור הבא עם מיקוד ובקרת עומקתאורה לצילום פורטרט עם  6אפקטיםAnimoji and Memojiמצב צילום לילהסגנונות צילוםלכידת צבעים בטווח רחב בצילום תמונותדוממות ותמונות חיותתיקון עיוות עדשותייצוב תמונה אוטומטיצילום פרץ תמונותהקלטת וידאו 4K בקצב של  30 ,25 ,24 או 60 תמוניות/שניההקלטת וידאו 1080p HD בקצב של 30 ,25 או 60 תמוניות/שניהמצב צילום קולנועי עד איכות 4K HDR בקצב של 30 תמוניות/שניההקלטת וידאו HDR עם Dolby Visionעד לאיכות 4K בקצב של 60 תמוניות/שניהצילום וידאו בהילוך איטי באיכות 1080p בקצב של 120 תמוניות/שניהצילום וידאו בהילוך מהיר (Time lapse) עם ייצובצילום בהילוך מהיר (Time lapse) במצב לילהמעבר בזק מצילום תמונות לצילום וידאו (QuickTake video)ייצוב וידאו קולנועי 4K, 1080p ו-720p                                    \n                                \n                                \n                                    \n                                        Sensor\n                                    \n                                    \nמנגנון לזיהוי פנים מאובטח Face IDמד לחץ אוויר אטמוספרי (ברומטר)ג׳ירוסקופ עם טווח דינמי גבוהמד תאוצה עד 256 כוחות-Gחיישן קירבהצמד חיישני תאורת סביבה                                    \n                                \n                                \n                                    \n                                        Additional Characteristics\n                                    \n                                    \nMagSafeטעינה אלחוטית עד 15Wמערך מגנטיםמגנט בעל מנגנון ליישוּר עצמיזיהוי אביזר NFCמד כוחות מגנטים (מגנומטר)                                    \n                                \n                                \n                                    \n                                        Product Dimensions\n                                    \n                                    \nרוחב: 71.6 מ״מגובה: 147.6 מ״מעובי: 7.80 מ״ממשקל: 171 גרם                                    \n                                \n                                \n                                    \n                                        What's in the box\n                                    \n                                    \niPhone 15 עם מערכת הפעלה iOS 17כבל טעינה USB-C קלוע באורך 1 מטר במהירות USB 2                                    \n                                \n                                \n                                    \n                                        Warranty\n                                    \n                                    \nשנה אחריות ושירות יצרן                                    \n                                \n                \n            \n        \n    \n\n        \n        \n            \n    קישור לנתוני יצרן\n\nצבעים ומקטים לבחירה:צבע Black - מק\"ט MTP63HX/Aצבע Pink - מק\"ט MTP73HX/Aצבע Yellow - מק\"ט MTP83HX/Aצבע Blue - מק\"ט MTP93HX/Aצבע Green - מק\"ט MTPA3HX/A\n\n        \n\n    \n\n                \n                    \n                    \n\n    \n        \n            Products specifications\n        \n        \n            \n                \n                    \n                        Attribute name\n                        Attribute value\n                    \n                \n                \n                                \n                                    \n                                        Model\n                                    \n                                    \niPhone 15                                    \n                                \n                                \n                                    \n                                        SKU\n                                    \n                                    \nצבעים ומקטים לבחירה:צבע Black - מק\"ט MTP63HX/Aצבע Pink - מק\"ט MTP73HX/Aצבע Yellow - מק\"ט MTP83HX/Aצבע Blue - מק\"ט MTP93HX/Aצבע Green - מק\"ט MTPA3HX/A                                    \n                                \n                                \n                                    \n                                        Storage\n                                    \n                                    \n256GB                                    \n                                \n                                \n                                    \n                                        Screen Size\n                                    \n                                    \n\"6.1 OLED                                    \n                                \n                                \n                                    \n                                        Display Resolution\n                                    \n                                    \n2556x1179                                    \n                                \n                                \n                                    \n                                        Chipset\n                                    \n                                    \nA16 Bionicיחידת עיבוד מרכזית בעלת 6 ליבותיחידת עיבוד גרפי בעלת 5 ליבותמנוע נוירוני (עצבי) בעל 16 ליבות                                    \n                                \n                                \n                                    \n                                        Rear Camera (main)\n                                    \n                                    \nמצלמה עיקרית 48MP:26 מ״מ מפתח צמצם ƒ/1.6, ייצוב תמונה אופטי מבוסס חיישן נע בעל שני ציריתנועה, 100% Focus Pixels (מיקוד תוך שימוש במידע מכלל הפיקסלים),תמיכה בתמונות ברזולוציה גבוהה במיוחד (24MP ו-48MP).מצלמת 12MP רחבה במיוחד:13מ״מ, מפתח צמצם ƒ/2.4 ושדה ראייה של  120מעלות, 100% Focus Pixels.מצלמת 12MP טלפוטו פי 2 (מאופשרת על ידי חיישן ייעודי):52 מ״מ מפתח צמצם ƒ/1.6, ייצוב תמונה אופטי מבוסס חיישן נע בעל שני צירי תנועה, 100% Focus Pixels.התקרבות (zoom in) אופטית 2xהתרחקות (zoom out) אופטית 2xטווח התקרבות-התרחקות אופטית 4xהתקרבות (zoom in) דיגיטלית עד 10xכיסוי עדשות מקריסטל ספירמבזק (פלאש) True Toneמערכת עיבוד תמונה Photonic Engineמערכת עיבוד תמונה Deep FusionSmart HDR 5צילומי פורטרט של הדור הבא עם מיקוד ובקרת עומקתאורה לצילום פורטרט עם 6 אפקטיםמצב צילום לילהצילום פנורמי (עד 63MP)סגנונות צילוםלכידת צבעים בטווח רחב בצילום תמונות דוממות ותמונות חיותתיקון עיוות עדשות (מצלמה רחבה במיוחד)תיקון עיניים אדומות מתקדםייצוב תמונה אוטומטיצילום פרץ תמונותתיוג מיקום גיאוגרפי לתמונותפורמטים לשמירת תמונות : HEIFו-JPE\nהקלטת וידאו:הקלטת וידאו 4K בקצב של 30 ,25 ,24 או 60 תמוניות/שניההקלטת וידאו 1080p HD בקצב של  30 ,25 או 60 תמוניות/שניההקלטת וידאו 720p HD בקצב של 30 תמוניות/שניהמצב צילום קולנועי עד איכות של  4K HDR בקצב של 30תמוניות/שניהמצב צילום פעילות עד איכות של  2.8K בקצב של 60 תמוניות/שניההקלטת וידאו HDR עם Dolby Vision עד לאיכות 4K בקצב של 60 תמוניות/שניהצילום וידאו בהילוך איטי באיכות 1080p בקצב של 120 או 240 תמוניות/שניהצילום וידאו בהילוך מהיר (Time lapse) עם ייצובצילום בהילוך מהיר (Time lapse) במצב צילום לילהמעבר בזק מצילום תמונות לצילום וידאו (QuickTake video)ייצוב תמונה אופטי מבוסס חיישן נע בעל שני צירי תנועה (מצלמה עיקרית)התקרבות (zoom in) דיגיטלית עד 6xהקלטת שמע דינמית שמאפשרת את בחירת הכיוון הרצוי להקלטה ומחלישה את הצלילים המגיעים מכיוונים אחרים בהתאם להתקרבות למושא הצילום (Audio zoom)מבזק (פלאש) True Toneייצוב וידאו קולנועי 1080p ,4Kו-720pמיקוד אוטומטי מתמשך בצילום וידאושמירת תמונות דוממות  8מגה-פיקסל תוך כדי הקלטת וידאו 4Kהתקרבות/התרחקות (zoom) בעת ניגון וידאופורמטים לשמירת וידאו : HEVCו-H.264הקלטת שמע בסטריאו                                    \n                                \n                                \n                                    \n                                        Front Camera (selfie)\n                                    \n                                    \nמצלמת 12MPמפתח צמצם ƒ/1.9מיקוד אוטומטי עם Focus PixelsRetina מבזקמערכת עיבוד תמונה Photonic Engineמערכת עיבוד תמונה Deep FusionSmart HDR 5צילומי פורטרט של הדור הבא עם מיקוד ובקרת עומקתאורה לצילום פורטרט עם  6אפקטיםAnimoji and Memojiמצב צילום לילהסגנונות צילוםלכידת צבעים בטווח רחב בצילום תמונותדוממות ותמונות חיותתיקון עיוות עדשותייצוב תמונה אוטומטיצילום פרץ תמונותהקלטת וידאו 4K בקצב של  30 ,25 ,24 או 60 תמוניות/שניההקלטת וידאו 1080p HD בקצב של 30 ,25 או 60 תמוניות/שניהמצב צילום קולנועי עד איכות 4K HDR בקצב של 30 תמוניות/שניההקלטת וידאו HDR עם Dolby Visionעד לאיכות 4K בקצב של 60 תמוניות/שניהצילום וידאו בהילוך איטי באיכות 1080p בקצב של 120 תמוניות/שניהצילום וידאו בהילוך מהיר (Time lapse) עם ייצובצילום בהילוך מהיר (Time lapse) במצב לילהמעבר בזק מצילום תמונות לצילום וידאו (QuickTake video)ייצוב וידאו קולנועי 4K, 1080p ו-720p                                    \n                                \n                                \n                                    \n                                        Sensor\n                                    \n                                    \nמנגנון לזיהוי פנים מאובטח Face IDמד לחץ אוויר אטמוספרי (ברומטר)ג׳ירוסקופ עם טווח דינמי גבוהמד תאוצה עד 256 כוחות-Gחיישן קירבהצמד חיישני תאורת סביבה                                    \n                                \n                                \n                                    \n                                        Additional Characteristics\n                                    \n                                    \nMagSafeטעינה אלחוטית עד 15Wמערך מגנטיםמגנט בעל מנגנון ליישוּר עצמיזיהוי אביזר NFCמד כוחות מגנטים (מגנומטר)                                    \n                                \n                                \n                                    \n                                        Product Dimensions\n                                    \n                                    \nרוחב: 71.6 מ״מגובה: 147.6 מ״מעובי: 7.80 מ״ממשקל: 171 גרם                                    \n                                \n                                \n                                    \n                                        What's in the box\n                                    \n                                    \niPhone 15 עם מערכת הפעלה iOS 17כבל טעינה USB-C קלוע באורך 1 מטר במהירות USB 2                                    \n                                \n                                \n                                    \n                                        Warranty\n                                    \n                                    \nשנה אחריות ושירות יצרן                                    \n                                \n                \n            \n        \n    \n\n                    \n                \n                \n                \n            \n        \n        \n\n                \n                    \n\n\n                \n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n\n\n    \n\n\n        \n        \n    \n    \n\n\n\n\n\n\n        \n            \n\n\n\n        \n        \n\n        \n\n    \n        \n            \n                Information\n            \n            \n                \n                        Company Profile\n                        About\n                        Privacy Policy\n                        Corruption Policy and Non-Bribery\n                \n            \n        \n\n        \n            \n                My account\n            \n            \n\n                    \n                        Orders\n                    \n\n                    Addresses\n            \n        \n\n        \n            \n                Customer service\n            \n            \n\n                    Contact us\n                    Download Forms and Instructions\n                    Technical Support\n                    Jobs\n                    Terms of Use\n                    צפייה בהסכם פשרה בת\"צ 27696-04-16 בעניין אסוס\n            \n        \n\n        \n                \n                    Follow us\n                \n            \n\n\n    \n    \n        \n            \n                \n            \n        \n        \n            \n                \n            \n        \n        \n            \n                \n            \n        \n\n    \n\n\n\n        \n\n        \n            \n                \n            \n            \n                \n            \n\n            \n\n\n        \n\n\n\n    \n    \n        \n                \n                    Powered by nopCommerce\n                \n            \n                \n                    \n                \n            \n            \n                Copyright © 2025 C-Data. All rights reserved."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Scrapping Hook": {
+      "main": [
+        [
+          {
+            "node": "Scrap Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body1": {
+      "main": [
+        [
+          {
+            "node": "Clean Content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Scrap Website1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrapping Hook1": {
+      "main": [
+        [
+          {
+            "node": "Scrap Website1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "60bcec95-a173-48d9-9748-b04e6e7046b5",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "JsmB3oDDNdEvn0Va",
+  "tags": []
+}

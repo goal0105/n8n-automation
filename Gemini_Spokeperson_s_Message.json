@@ -1,0 +1,217 @@
+{
+  "name": "Gemini Spokeperson's Message",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -120
+      ],
+      "id": "c768bde3-68bb-4a05-95c8-5926c1d1bfeb",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBNgcx_rhAxPp3Bxf2k68al1Z1LtQBNa8g",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"contents\": [\n      {\n        \"parts\": [\n          {\n            \"text\": \"Extract the article content most relevant to the text '{{ $json.body.spokesperson_message }}' in the sites, https://www.walla.co.il/, https://maariv.co.il/ and generate the full article based on it.\"\n          }\n        ]\n      }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        -300
+      ],
+      "id": "c41f4a14-dc9f-4508-a240-c8d7456c7fe0",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-spokesperson-message-article",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -680,
+        -300
+      ],
+      "id": "6df265d9-6dcf-43f9-a9d8-7fd8f40d0b4f",
+      "name": "Webhook",
+      "webhookId": "703f0dd3-d77f-4ab1-9129-eb4aed674af5"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.candidates[0].content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        -300
+      ],
+      "id": "bc08e802-8c3a-446c-af64-a57ddcfe90c0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## prompt 1\n\nExtract the article content most recent and most relevant to {{ $json.body.spokesperson_message }} in the sites, https://www.walla.co.il/, https://maariv.co.il/ and generate the full article.\n\n\n## prompt 2\n\nGenerate a full article with the content '{{ $json.body.spokesperson_message }}'",
+        "height": 340,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -300
+      ],
+      "id": "17f941d9-e058-4033-871b-fd12f7ef0f6c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBNgcx_rhAxPp3Bxf2k68al1Z1LtQBNa8g",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"contents\": [\n      {\n        \"parts\": [\n          {\n            \"text\": \"Create a full article with the content '{{ $json.body.spokesperson_message }}'\"\n          }\n        ]\n      }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -300,
+        180
+      ],
+      "id": "83dddcd4-8c9f-4d0b-9aa4-772ca64713ff",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-spokesperson-message-article1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        180
+      ],
+      "id": "04efee85-74e8-43e5-9786-28b6a49aae42",
+      "name": "Webhook1",
+      "webhookId": "703f0dd3-d77f-4ab1-9129-eb4aed674af5"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.candidates[0].content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        40,
+        180
+      ],
+      "id": "936101c8-dfdd-406d-8486-158c88c78b01",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d82b8ac3-d8d1-4378-9470-f9bc8da1e7d7",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "SFiQKeUGYnzb8JIB",
+  "tags": []
+}

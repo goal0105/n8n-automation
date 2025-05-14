@@ -1,0 +1,2010 @@
+{
+  "name": "Spokesperson Message Process",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "835f906a-740c-4568-86f0-6c6602bf81bc",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        4740,
+        440
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "01177c09-e817-482a-bfd3-4a4bfb117283",
+      "name": "Clean Content",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        4040,
+        640
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1pfhXsGN_VIts-2xhkX-EC6cn4u-_Zx9k9uL6mQ2G6tI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "input",
+          "mode": "name"
+        },
+        "dataMode": "autoMapInputData",
+        "columnToMatchOn": "message.content",
+        "options": {}
+      },
+      "id": "5549964c-e01b-4fc8-99cc-10abbbb69c9d",
+      "name": "Update Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        5040,
+        700
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "id": "b32d19fb-1e20-4c4c-89ac-032b5c0f7bc8",
+      "name": "Split in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        3260,
+        600
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "content": "https://m.maariv.co.il/journalists/opinions/article-1186930\n\nWebsite Scraping\n{{ $json.body.url }}\n\n1 \nהקלט שלך הוא תוכן ה-HTML של אתר אינטרנט.\nהפלט שלך צריך להיות תוכן של המאמר וסגנון עיתונאי.\nיש לשמור על התוכן העיקרי של האתר.\n\n2\nYou are a smart assistant in journalistic editing and website content extraction. Extract only the main article from a given website content, while fully preserving important facts, quotes and data. Ignore elements such as navigation, ads, scripts and irrelevant links. Produce clear, eloquent and journalistic text, divided into paragraphs with clear headings.\nאתה עוזר חכם בעריכה עיתונאית ובחילוץ תוכן באתר. חלץ רק את המאמר הראשי מתוכן אתר נתון, תוך שמירה מלאה על עובדות חשובות, ציטוטים ונתונים. התעלם ממרכיבים כגון ניווט, מודעות, סקריפטים וקישורים לא רלוונטיים. הפק טקסט ברור, רהוט ועיתונאי, מחולק לפסקאות עם כותרות ברורות.\n\n\nYou are a professional assistant specializing in identifying and extracting the main content from website content. Your task is to filter and keep only the main article content from the text provided to you, while preserving all facts, data and quotes. You must remove content that does not directly belong to the article (e.g. advertising content, side content, comments, links to additional content or site navigation).\nPresent a clean and clear final result, organized into journalistic-style paragraphs, with a clear title and fluent and eloquent content, that can be used directly for publication.\n\nאתה עוזר מקצועי המתמחה בזיהוי והפקת התוכן העיקרי מתוכן האתר. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי מהטקסט שסופק לך, תוך שמירה על כל העובדות, הנתונים והציטוטים. עליך להסיר תוכן שאינו שייך ישירות למאמר (כגון תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים או ניווט באתר).\nהציגו תוצאה סופית נקייה וברורה, מאורגנת בפסקאות בסגנון עיתונאי, עם כותרת ברורה ותוכן קולח ורהוט, שניתן להשתמש בהם ישירות לפרסום.\n\n\n\nYou are a professional assistant who specializes in identifying and extracting the main content from the content of a website. Your task is to filter and save only the main article content from the text provided to you, while preserving all the facts, data and quotes. You must remove content that does not directly belong to the article (such as advertising content, side content, comments, links to additional content or site navigation).\nPresent a clean and clear final result, organized in journalistic-style paragraphs, with a clear title and fluent and eloquent content, which can be used directly for publication.\n\nאתה עוזר מקצועי המתמחה בזיהוי והפקת התוכן העיקרי מתוכן האתר. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי מהטקסט שסופק לך, תוך שמירה על כל העובדות, הנתונים והציטוטים. עליך להסיר תוכן שאינו שייך ישירות למאמר (כגון תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים או ניווט באתר).\nהציגו תוצאה סופית נקייה וברורה, מאורגנת בפסקאות בסגנון עיתונאי, עם כותרת ברורה ותוכן קולח ורהוט, שניתן להשתמש בהם ישירות לפרסום.\n\n\n\nYou are a skilled helper in extracting website content. Extract only the main articles from a given website content while fully preserving important facts, quotes and data. Ignore elements like navigation, advertisements, scripts and unrelated links.\n\nאתה עוזר מיומן בחילוץ תוכן האתר. חלץ רק את המאמרים העיקריים מתוכן אתר נתון תוך שמירה מלאה על עובדות חשובות, ציטוטים ונתונים. התעלם ממרכיבים כמו ניווט, פרסומות, סקריפטים וקישורים לא קשורים.\n\n\n\n\nאתה עוזר מקצועי המתמחה בזיהוי ויצירת תוכן מרכזי לאתר שלך. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי תוך שמירה על כל העובדות, הנתונים והציטוטים מהטקסט שסופק. יש להסיר תכנים שאינם שייכים ישירות למאמר (תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים, ניווט באתר וכדומה).\nהציגו תוצר סופי נקי וברור, כתוב בפסקאות בסגנון עיתונאי, עם כותרות ברורות ותוכן קולח ורהוט, מוכן לפרסום. הנה תוכן האתר: {{ $json.contentShort }}\n",
+        "height": 680,
+        "width": 1140
+      },
+      "id": "ea9096a0-bbe5-46f0-a8fc-536743d3614f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5720,
+        200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "d4dd913a-4772-40b7-82b9-056176d08115",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        2460,
+        600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "b27c262c-0a23-4eb5-96bd-4aec4a017e58",
+      "name": "Retrieve URLs",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2920,
+        800
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$json.Url}}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "53216e49-d13b-4016-a22e-98f21cc4692e",
+      "name": "Request HTML Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3560,
+        640
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc227615-68d1-4e16-b097-62391d00d942",
+      "name": "Cut out the body",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        3820,
+        640
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "אתה מומחה בחילוץ תוכן. חלץ מהאתר את המאמר העיקרי בלבד, תוך שמירת כל העובדות, הציטוטים והנתונים החשובים. התעלם לחלוטין מניווט, פרסומות, סקריפטים וקישורים לא רלוונטיים.\n"
+            },
+            {
+              "content": "=תוכן האתר: {{ $json.contentShort }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "00679ccb-6136-4c53-8cf8-edbf9eb3bb1c",
+      "name": "Ask the AI",
+      "type": "n8n-nodes-base.openAi",
+      "position": [
+        4300,
+        640
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content",
+        "options": {}
+      },
+      "id": "a5590c5d-af5f-4011-8f36-2a85ee0b339f",
+      "name": "Split Out the Description",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        4540,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-website-content",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        40
+      ],
+      "id": "c930d046-b2b3-4eb3-bbc7-353c6296f259",
+      "name": "Scrapping Hook",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "e6cb9aea-8c11-42d3-b59d-addc87dcec1f",
+      "name": "Delete Url",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2700,
+        600
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ffk5ZKquBt78H8LOl07hjGt8x7W7qZlc-XZpzRLq8Sk",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "url",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Url": "={{ $json.body.url }}"
+          },
+          "matchingColumns": [
+            "Url"
+          ],
+          "schema": [
+            {
+              "id": "Url",
+              "displayName": "Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a2a6175d-c24a-4491-9409-7fc30ce19c06",
+      "name": "Input the Url",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        2920,
+        600
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "KS3smJFrYUzlhDzN",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/custom_fields/{{ $vars.website_content_field_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4300,
+        40
+      ],
+      "id": "462f9569-fea7-427d-89db-c8bf52f94b72",
+      "name": "Send Website Content",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{$json.send_website_content_flow_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4960,
+        40
+      ],
+      "id": "3914d1cb-7776-4ade-8019-843590e5150a",
+      "name": "Send Website Process Flow",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{$vars.user_id}}/custom_fields/{{ $vars.website_content_field_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4120,
+        40
+      ],
+      "id": "a9475ac3-6ecb-4bc7-a063-41b964ff3270",
+      "name": "Init Website Content",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e50c130b-884b-4faa-b023-b25508ea8b8c",
+      "name": "Cut out the body1",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        3460,
+        40
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "333a2b10-64ed-44ef-80d3-efcd257a967f",
+      "name": "Clean Content1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        3620,
+        40
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content-extraction specialist.\n\nTask: from the raw HTML/text, keep ONLY the core article (title + body).  \n• Preserve all facts, numbers, dates and direct quotes.  \n• Remove ads, sidebars, navigation links, comments, “read more” blocks and social buttons.  \n• Strip every HTML tag and any inline CSS/JS snippets.  \n• Keep quotation marks; convert <blockquote> elements to plain text wrapped in quotes.  \n• If the publish date exists only in meta tags, prepend it in brackets at the start of BODY.  \n• Normalize Unicode punctuation (long dashes, curly quotes) to standard Hebrew typography.\n\nReturn plain text in two sections:\n\n### TITLE\n<clean headline from source>\n\n### BODY\n<clean body in neutral journalistic paragraphs> \n\nhere is the raw html/text : {{ $json.contentShort }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        3800,
+        40
+      ],
+      "id": "f95bec8b-aefa-45c5-9033-7954df50a7bb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3740,
+        220
+      ],
+      "id": "053490d2-84e7-4b70-b3f9-3a126fddca98",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "AI agent Prompt\n1\nאתה עוזר מיומן בחילוץ תוכן האתר. חלץ רק את המאמרים העיקריים מתוכן אתר נתון תוך שמירה מלאה על עובדות חשובות, ציטוטים ונתונים. התעלם ממרכיבים כמו ניווט, פרסומות, סקריפטים וקישורים לא קשורים. תוכן האתר: {{ $json.contentShort }}\n\n\n2 \nאתה עוזר מקצועי המתמחה בזיהוי ויצירת תוכן מרכזי לאתר שלך. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי תוך שמירה על כל העובדות, הנתונים והציטוטים מהטקסט שסופק. יש להסיר תכנים שאינם שייכים ישירות למאמר (תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים, ניווט באתר וכדומה).\nהציגו תוצר סופי נקי וברור, כתוב בפסקאות בסגנון עיתונאי, עם כותרות ברורות ותוכן קולח ורהוט, מוכן לפרסום. הנה תוכן האתר: {{ $json.contentShort }}\n\n\n\n3. Time, Place \n\nאתה עוזר מסור ומומחה שמתמחה בזיהוי ויצירת תוכן הליבה שהאתר שלך צריך. המשימה שלך היא לסנן ולשמור רק את תוכן המאמר הראשי תוך שמירה על כל העובדות (זמן, מקום, אירועים וכו'), הנתונים והציטוטים מהטקסט שסופק. יש להסיר תכנים שאינם שייכים ישירות למאמר (תוכן פרסומי, תוכן צדדי, הערות, קישורים לתכנים נוספים, ניווט באתר וכדומה).\nהיכונו לפרסום על ידי הגשת תוצר סופי נקי וברור כתוב בפסקאות בסגנון עיתונאי, עם כותרות ברורות ותוכן קולח ורהוט. התוכן של האתר הוא: {{ $json.contentShort }}\n\n\n\n",
+        "height": 680,
+        "width": 500
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        200
+      ],
+      "id": "177bce85-09ed-427f-afde-d580a0a16a13",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Scrapping Hook').item.json.body.url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "259aca7f-179e-4e9a-9dbe-691f62e3aa51",
+      "name": "Scrap Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        3280,
+        40
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "# Extract Website Content and send it chatbot \n",
+        "height": 500,
+        "width": 2200,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        -120
+      ],
+      "id": "8fcd4440-7b4a-4818-9a66-ffcfb54764fe",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# English Article GPT Process\n",
+        "height": 340,
+        "width": 1380,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3800,
+        -500
+      ],
+      "id": "00bfae07-334e-4249-9aae-2253cfd3430f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Generate Article Prompt\n\nאתה עיתונאי ועורך חדשות מנוסה עם המשימה לייצר כתבה חדשותית איכותית, מרתקת ומקיפה מתוך הודעה לעיתונות ומידע רקע משלים שסופק לך. מטרתך לשלב את המידע משני המקורות בצורה חלקה ויצירתית, ליצירת מאמר מגובש, שלם, אינפורמטיבי ומוכן לפרסום מיידי.\n\nהקפד לעמוד בהנחיות הבאות:\n\nכותרת: מושכת, מגרה סקרנות, ברורה וכוללת מילות מפתח חשובות ל-SEO.\n\nפסקת פתיחה: תמציתית, חזקה, מסקרנת, ומסכמת את עיקרי הסיפור באופן שיגרום לקורא להמשיך לקרוא.\n\nסגנון עיתונאי: אובייקטיבי, ברור, ענייני ומרתק, תוך שימוש בשפה תקנית, קולחת ונטולת ז'רגון מקצועי או סגנון משפטי.\n\nמיזוג מידע: שלב את ההקשר הרלוונטי באופן טבעי, ללא מעברים פתאומיים או חזרות מיותרות. הוסף ציטוטים רלוונטיים, עובדות נתמכות ודוגמאות ככל האפשר.\n\nשלמות התוכן: ודא שהמאמר מכסה בצורה יסודית ומעמיקה את כל ההיבטים הנחוצים להבנת הנושא וההשלכות הפוטנציאליות שלו.\n\nהימנע מדעה אישית או השערות: הסתמך אך ורק על המידע שסופק לך, תוך שמירה על אובייקטיביות ודיוק עובדות מוחלט.\n\n### הודעה לעיתונות:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\n### הקשר רלוונטי נוסף:\n{{ $json.message.content }}\n\n\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\nYou are an experienced journalist and news editor tasked with producing a high-quality, engaging, and comprehensive news story based on a press release and the additional relevant context provided to you. Your goal is to seamlessly and creatively integrate information from both sources into a coherent, complete, and informative article ready for immediate publication.\n\nBe sure to follow these guidelines:\n\nTitle: Compelling, exciting, clear, and includes important SEO keywords.\n\nSummary: Summarize the main points of the story in a way that is concise, powerful, and exciting, and makes the reader want to keep reading.\n\nJournalistic style: Objective, clear, to the point, and engaging; use standard, fluent language; avoid jargon or legalese.\n\nInformation blending: Integrate relevant context naturally, without abrupt transitions or unnecessary repetition. Add relevant quotes, supporting facts, and examples whenever possible.\n\nContent completeness: Ensure that the article covers all aspects necessary to understand the topic and its potential implications thoroughly and in depth.\n\nAvoid personal opinions or speculation. Rely solely on the information provided and maintain complete objectivity and factual accuracy.\n\n### Press Release:\n{{ $('English Article Hook').item.json.body.press_release_text }}\n\n### Additional Related Context:\n{{ $json.message.content }}",
+        "height": 680,
+        "width": 820
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6040,
+        -500
+      ],
+      "id": "d9a7f7ff-bcab-4b40-a78b-884ac31722f7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Extract Relevant Context Prompt : \n\nזה עוזר לך לחלץ חלקים רלוונטיים של הודעה לעיתונות בהתבסס על ההקשר הנוסף שסופק. התפקיד שלך הוא לנתח בקפידה את ההקשר הנוסף שסופק (כתבות חדשותיות קשורות, אירועים קודמים, סיפורי רקע או אירועים שפורסמו) ולחלץ כמה שיותר תוכן **רלוונטי ומשפיע** שמבהיר, מחזק או מוסיף הקשר בעל ערך להודעה המקורית לעיתונות. יש להעשיר את התוכן על ידי הכללת חומרים (דוגמאות, זמן, מקום וכו').\n\nהמבנה שלך חייב לעמוד בקפדנות בהנחיות הבאות:\n\n- כלול רק מידע הקשור ישירות להודעה לעיתונות שסופקה או שמשפר את ההבנה של ההודעה לעיתונות.\n- התוכן שחולץ צריך להיות תמציתי, אך מלא מספיק כדי לספק הקשר משמעותי.\n- כעיתונאי, שמור על טון ניטרלי. הימנע מדעות סובייקטיביות או פרטים לא רלוונטיים.\n- מספק הקשר שחולץ לפסקאות ברורות ומוכנות לשימוש המתאימות להכללה במאמרי חדשות.\n\n### הודעה לעיתונות:\n{{ $json.body.press_release_text }}\n\n\n### הקשר נוסף:\n{{ $json.body.website_content }}\n\n\n--------------------------------------------------------------------------------------------------\n--------------------------------------------------------------------------------------------------\n\nYou are an assistant who extracts relevant content from the additional context provided. Your role is to carefully analyze the additional context provided (related news articles, previous events, background stories, or published events) and extract as much **relevant and impactful** content as possible that clarifies, reinforces, or adds valuable context to the original press release. Content should be enriched by including contextual information (time, place, event, etc.).\n\nYour structure should strictly adhere to the following guidelines:\n\n- Include only information that is directly relevant to the press release provided or that enhances the understanding of the press release.\n- The extracted content should be concise, yet complete enough to provide meaningful context.\n- Maintain a neutral tone as a journalist. Avoid subjective opinions or irrelevant details.\n- Provide the extracted context in clear, ready-to-use paragraphs suitable for inclusion in a news article.\n\n### Press Release:\n{{ $json.body.press_release_text }}\n\n### Additional Context:\n{{ $json.body.website_content }}",
+        "height": 680,
+        "width": 820
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        -500
+      ],
+      "id": "3b9f8f44-3848-4b7a-bdeb-09119fa86e9d",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=זה עוזר לך לחלץ חלקים רלוונטיים של הודעה לעיתונות בהתבסס על ההקשר הנוסף שסופק. התפקיד שלך הוא לנתח בקפידה את ההקשר הנוסף שסופק (כתבות חדשותיות קשורות, אירועים קודמים, סיפורי רקע או אירועים שפורסמו) ולחלץ כמה שיותר תוכן **רלוונטי ומשפיע** שמבהיר, מחזק או מוסיף הקשר בעל ערך להודעה המקורית לעיתונות. יש להעשיר את התוכן על ידי הכללת חומרים (דוגמאות, זמן, מקום וכו').\n\nהמבנה שלך חייב לעמוד בקפדנות בהנחיות הבאות:\n\n- כלול רק מידע הקשור ישירות להודעה לעיתונות שסופקה או שמשפר את ההבנה של ההודעה לעיתונות.\n- התוכן שחולץ צריך להיות תמציתי, אך מלא מספיק כדי לספק הקשר משמעותי.\n- כעיתונאי, שמור על טון ניטרלי. הימנע מדעות סובייקטיביות או פרטים לא רלוונטיים.\n- מספק הקשר שחולץ לפסקאות ברורות ומוכנות לשימוש המתאימות להכללה במאמרי חדשות.\n\n### הודעה לעיתונות:\n{{ $json.body.press_release_text }}\n\n\n### הקשר נוסף:\n{{ $json.body.website_content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4520,
+        -800
+      ],
+      "id": "3b17b8ff-eae5-4a49-b262-224b3178649c",
+      "name": "Extract Relevant Context",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=אתה עיתונאי ועורך חדשות מנוסה עם המשימה לייצר כתבה חדשותית איכותית, מרתקת ומקיפה מתוך הודעה לעיתונות ומידע רקע משלים שסופק לך. מטרתך לשלב את המידע משני המקורות בצורה חלקה ויצירתית, ליצירת מאמר מגובש, שלם, אינפורמטיבי ומוכן לפרסום מיידי.\n\nהקפד לעמוד בהנחיות הבאות:\n\nכותרת: מושכת, מגרה סקרנות, ברורה וכוללת מילות מפתח חשובות ל-SEO.\n\nפסקת פתיחה: תמציתית, חזקה, מסקרנת, ומסכמת את עיקרי הסיפור באופן שיגרום לקורא להמשיך לקרוא.\n\nסגנון עיתונאי: אובייקטיבי, ברור, ענייני ומרתק, תוך שימוש בשפה תקנית, קולחת ונטולת ז'רגון מקצועי או סגנון משפטי.\n\nמיזוג מידע: שלב את ההקשר הרלוונטי באופן טבעי, ללא מעברים פתאומיים או חזרות מיותרות. הוסף ציטוטים רלוונטיים, עובדות נתמכות ודוגמאות ככל האפשר.\n\nשלמות התוכן: ודא שהמאמר מכסה בצורה יסודית ומעמיקה את כל ההיבטים הנחוצים להבנת הנושא וההשלכות הפוטנציאליות שלו.\n\nהימנע מדעה אישית או השערות: הסתמך אך ורק על המידע שסופק לך, תוך שמירה על אובייקטיביות ודיוק עובדות מוחלט.\n\nתרגם את התוצאות לאנגלית\n\n### הודעה לעיתונות:\n{{ $('English Article Hook').item.json.body.press_release_text }}\n\n### הקשר רלוונטי נוסף:\n{{ $json.body.website_content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4380,
+        -380
+      ],
+      "id": "1029c260-24eb-4f15-90ae-da45e2e7d74f",
+      "name": "Generate Blended Article",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{ $vars.integrate_article_flow_id}} ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        60
+      ],
+      "id": "2b1b5624-6024-485f-b783-27952d1006a7",
+      "name": "Send Integrate Article Flow",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "send-integreate-article-flow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2340,
+        60
+      ],
+      "id": "ec231e8d-faf1-4633-9b43-2495f9c412b7",
+      "name": "Trigger",
+      "webhookId": "e4f3980f-199b-4aed-9b11-a0046483abc2"
+    },
+    {
+      "parameters": {
+        "content": "# Start Integrate Article Flow",
+        "height": 500,
+        "width": 740,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -120
+      ],
+      "id": "a80590cf-2cfc-4ea7-9e40-d0c36ea2e39f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/custom_fields/{{$vars.blended_article_field_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4780,
+        -380
+      ],
+      "id": "77515c89-cb5b-40e3-83b2-20e43baf7cc2",
+      "name": "Send Blended Article",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{$vars.show_integrate_article_flow_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4960,
+        -380
+      ],
+      "id": "d0055452-f096-4d2d-8147-99e3bb99e3d2",
+      "name": "Show Integrate Article",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Integrate Article GPT Process\n",
+        "height": 340,
+        "width": 1560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -500
+      ],
+      "id": "3b045ec3-fe35-4564-87e8-5a3084795614",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-integration-article",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        -380
+      ],
+      "id": "75791bad-42a1-44d5-928b-34a54cfaa130",
+      "name": "Integration Hook1",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=זה עוזר לך לחלץ חלקים רלוונטיים של הודעה לעיתונות בהתבסס על ההקשר הנוסף שסופק. התפקיד שלך הוא לנתח בקפידה את ההקשר הנוסף שסופק (כתבות חדשותיות קשורות, אירועים קודמים, סיפורי רקע או אירועים שפורסמו) ולחלץ כמה שיותר תוכן **רלוונטי ומשפיע** שמבהיר, מחזק או מוסיף הקשר בעל ערך להודעה המקורית לעיתונות. יש להעשיר את התוכן על ידי הכללת חומרים (דוגמאות, זמן, מקום וכו').\n\nהמבנה שלך חייב לעמוד בקפדנות בהנחיות הבאות:\n\n- כלול רק מידע הקשור ישירות להודעה לעיתונות שסופקה או שמשפר את ההבנה של ההודעה לעיתונות.\n- התוכן שחולץ צריך להיות תמציתי, אך מלא מספיק כדי לספק הקשר משמעותי.\n- כעיתונאי, שמור על טון ניטרלי. הימנע מדעות סובייקטיביות או פרטים לא רלוונטיים.\n- מספק הקשר שחולץ לפסקאות ברורות ומוכנות לשימוש המתאימות להכללה במאמרי חדשות.\n\n### הודעה לעיתונות:\n{{ $json.body.press_release_text }}\n\n\n### הקשר נוסף:\n{{ $json.body.website_content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4200,
+        -800
+      ],
+      "id": "3e2c9299-736c-4813-b3f6-bcf45b14d58b",
+      "name": "Extract Relevant Context1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a professional journalist tasked with creating a comprehensive, engaging, and ready-to-publish news article based solely on the given press statement. Use the provided background information only briefly to succinctly explain why the press statement was issued.\n\nImportant Rules:\nFocus primarily on the press statement; it contains the new and central information.\nUse the background solely to give minimal context to readers about why the press statement was issued.\n\nHere is the information you must use:\n### Press Statement:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\n### Background:\n{{ $json.body.context_content}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2720,
+        -380
+      ],
+      "id": "30a02cba-2746-4107-b4df-8bcf26f58715",
+      "name": "Generate Blended Article1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/custom_fields/{{$vars.blended_article_field_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3380,
+        -380
+      ],
+      "id": "7ec27bae-9215-454d-a70c-11c26b4cb717",
+      "name": "Send Blended Article1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{$vars.show_integrate_article_flow_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3540,
+        -380
+      ],
+      "id": "73dfe7dd-f8bb-4957-a5f7-02ddb2dd3555",
+      "name": "Show Integrate Article1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-English-article",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        3900,
+        -380
+      ],
+      "id": "284e8dee-1ee6-43a2-a0c5-166a6c2566dc",
+      "name": "English Article Hook",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "105603ed-5084-4434-87c1-eb5f45ef41ec",
+              "leftValue": "={{ $('Scrapping Hook').item.json.body.default }}",
+              "rightValue": "default",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4480,
+        40
+      ],
+      "id": "edd3d4c9-aed4-4f9d-b08d-479a5c0f3c21",
+      "name": "If English Article"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c14e8e61-da2c-455c-9e84-4f3087a0e13a",
+              "name": "send_website_content_flow_id",
+              "value": "={{ $vars.process_website_content_flow_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4720,
+        160
+      ],
+      "id": "add16e63-ab91-4f6b-a193-a59415727b0f",
+      "name": "Customize"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e293f889-1c86-4cbd-91ea-0f64cc54e1d4",
+              "name": "send_website_content_flow_id",
+              "value": "={{ $vars.integrate_article_flow_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4720,
+        -60
+      ],
+      "id": "31ddbdc6-54a2-4bab-b5b4-41c2fb4f240c",
+      "name": "Default"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\nYou are an Israeli newsroom writing assistant.\n\nYour task: transform an official press statement in Hebrew into a completely re-written, publish-ready news article that reads like original reporting (Maariv / Ynet / Walla style).  \nEmphasize the *core news* – Who? What? Where? – already בפסקה הראשונה.\n\nThis is an official press statement: \n{{ $json.message.content }}  \n\n━━━━━━━━━━━━━━\n❶ CORE SPECIFICATIONS\n━━━━━━━━━━━━━━\n1. 📰 Headline – up to 60 characters (Hebrew, keyword first, clear, specific).  \n2. 🗞 Sub-headline – up to 150 characters (Hebrew, expands on the headline, public impact).  \n3. 📄 Article body – 350-400 words, fluent journalistic Hebrew, third-person only, short paragraphs (2-4 sentences).\n\n• FIRST PARAGRAPH RULE – open with the key facts of the statement (subject, action, location, immediate consequence).  \n• Do **not** echo the spokesperson’s tone; rewrite from scratch.\n\n━━━━━━━━━━━━━━\n❷ STYLE & HUMANIZATION AGENTS\n━━━━━━━━━━━━━━\nHuman-Rhythm | Paragraph-Opener | Active-Voice | Redundancy-Check | Numerals-Formatter | Quote-Verifier | Close-Sharp  \n(Agents as defined in the main newsroom prompt — apply them automatically.)\n\n━━━━━━━━━━━━━━\n❸ FACT-CHECK & CONTEXT\n━━━━━━━━━━━━━━\n• Reflect political reality (April 2025: Donald Trump – President US; Benjamin Netanyahu – Prime Minister IL).  \n• If data is uncertain, write “בהתאם למידע הקיים”.  \n• Do not fabricate numbers, dates, or titles.\n\n━━━━━━━━━━━━━━\n❹ SEO & META\n━━━━━━━━━━━━━━\n• Integrate the primary keyword naturally in headline, sub-headline, and early body (no stuffing).  \n• Add META description (140-150 characters, Hebrew, includes keyword, no emojis).\n\n━━━━━━━━━━━━━━\n❺ OUTPUT FORMAT  (keep labels exactly)\n━━━━━━━━━━━━━━\n________  \n🎙 דסק AI | דוברות | בינה עיתונאית מבית מעריב\n\n📰 *כותרת ראשית*  \n(עד 60 תווים)\n\n🗞 *כותרת משנה*  \n(עד 150 תווים)\n\n📄 *גוף הכתבה*  \n(350–400 מילים. עברית עיתונאית, פסקאות קצרות, גוף שלישי בלבד)\n\n🔖 *META תיאור*  \n(140–150 תווים, בעברית, כולל מילת מפתח מרכזית)\n________\nRewrite the following Hebrew transcript into a publish-ready news article in Hebrew, fully aligned with the editorial standards of a leading Israeli newsroom (Maariv / Ynet / Walla).\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4820,
+        -800
+      ],
+      "id": "48b7d8ff-bde2-4848-bdae-4f15100744b3",
+      "name": "Restyle Article",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Restyle Prompt\n\nYou are an Israeli newsroom writing assistant.\n\nYour task: transform an official press statement in Hebrew into a completely re-written, publish-ready news article that reads like original reporting (Maariv / Ynet / Walla style).  \nEmphasize the *core news* – Who? What? Where? – already בפסקה הראשונה.\n\n━━━━━━━━━━━━━━\n❶ CORE SPECIFICATIONS\n━━━━━━━━━━━━━━\n1. 📰 Headline – up to 60 characters (Hebrew, keyword first, clear, specific).  \n2. 🗞 Sub-headline – up to 150 characters (Hebrew, expands on the headline, public impact).  \n3. 📄 Article body – 350-400 words, fluent journalistic Hebrew, third-person only, short paragraphs (2-4 sentences).\n\n• FIRST PARAGRAPH RULE – open with the key facts of the statement (subject, action, location, immediate consequence).  \n• Do **not** echo the spokesperson’s tone; rewrite from scratch.\n\n━━━━━━━━━━━━━━\n❷ STYLE & HUMANIZATION AGENTS\n━━━━━━━━━━━━━━\nHuman-Rhythm | Paragraph-Opener | Active-Voice | Redundancy-Check | Numerals-Formatter | Quote-Verifier | Close-Sharp  \n(Agents as defined in the main newsroom prompt — apply them automatically.)\n\n━━━━━━━━━━━━━━\n❸ FACT-CHECK & CONTEXT\n━━━━━━━━━━━━━━\n• Reflect political reality (April 2025: Donald Trump – President US; Benjamin Netanyahu – Prime Minister IL).  \n• If data is uncertain, write “בהתאם למידע הקיים”.  \n• Do not fabricate numbers, dates, or titles.\n\n━━━━━━━━━━━━━━\n❹ SEO & META\n━━━━━━━━━━━━━━\n• Integrate the primary keyword naturally in headline, sub-headline, and early body (no stuffing).  \n• Add META description (140-150 characters, Hebrew, includes keyword, no emojis).\n\n━━━━━━━━━━━━━━\n❺ OUTPUT FORMAT  (keep labels exactly)\n━━━━━━━━━━━━━━\n________  \n🎙 דסק AI | דוברות | בינה עיתונאית מבית מעריב\n\n📰 *כותרת ראשית*  \n(עד 60 תווים)\n\n🗞 *כותרת משנה*  \n(עד 150 תווים)\n\n📄 *גוף הכתבה*  \n(350–400 מילים. עברית עיתונאית, פסקאות קצרות, גוף שלישי בלבד)\n\n🔖 *META תיאור*  \n(140–150 תווים, בעברית, כולל מילת מפתח מרכזית)\n________\nRewrite the following Hebrew transcript into a publish-ready news article in Hebrew, fully aligned with the editorial standards of a leading Israeli newsroom (Maariv / Ynet / Walla).\n\n━━━━━━━━━━━━━━\n❶ CORE SPECIFICATIONS\n━━━━━━━━━━━━━━\n1. 📰 Headline – up to 60 characters (Hebrew, SEO-focused, keyword first, clear and specific)  \n2. 🗞 Sub-headline – up to 150 characters (Hebrew, adds value beyond the headline, no verbatim repetition)  \n3. 📄 Article body – 350–400 words, fluent journalistic Hebrew, third-person only, short dynamic paragraphs (2–4 sentences each), no legal or promotional language.\n\n━━━━━━━━━━━━━━\n❷ STYLE & HUMANIZATION AGENTS\n━━━━━━━━━━━━━━\n**Human-Rhythm Agent** – vary sentence length; mix terse and fuller paragraphs.  \n**Paragraph-Opener Agent** – open each paragraph with a different pattern (לפי גורמים, בעקבות, אתמול, מנגד…).  \n**Active-Voice Agent** – prefer strong present-tense verbs; avoid passive voice.  \n**Redundancy-Check Agent** – remove near-duplicate sentences or repeated phrases.  \n**Numerals-Formatter Agent** – convert hyphen “-” between numbers to Hebrew makaf (־) and normalize units.  \n**Quote-Verifier Agent** – if a direct quote appears, attribute it (לדברי…, כך נטען).  \n**Close-Sharp Agent** – end with a journalistic closing line that sums up or points to next steps; never “פרטים נוספים ייבדקו”.\n\n━━━━━━━━━━━━━━\n❸ FACT-CHECK & CONTEXT\n━━━━━━━━━━━━━━\n• Reflect the current political reality (April 2025): **Donald Trump is President of the United States; Benjamin Netanyahu is Prime Minister of Israel** – do **not** label them “former” unless explicitly stated.  \n• Verify dates, numbers, titles; if uncertain, write “בהתאם למידע הקיים”.  \n• Do not fabricate data.\n\n━━━━━━━━━━━━━━\n❹ SEO REQUIREMENTS\n━━━━━━━━━━━━━━\n• Integrate the primary keyword naturally in the headline, sub-headline and early in the body (no stuffing).  \n• Add a META description – 140–150 characters (Hebrew, includes the keyword, no emojis or promo terms).  \n• Keep URLs, hashtags and ads out of the body.\n\n━━━━━━━━━━━━━━\n❺ OUTPUT FORMAT  (do **not** modify labels or explanations)\n━━━━━━━━━━━━━━\n________  \n🎙 *דסק AI | בינה עיתונאית מבית מעריב*\n\n📰 *כותרת ראשית*  \n(עד 60 תווים, בעברית, עם מילות מפתח חדות ל-SEO)\n\n🗞 *כותרת משנה*  \n(עד 150 תווים, בעברית, מסכמת את הסיפור בקצרה ובבהירות)\n\n📄 *גוף הכתבה*  \n(350–400 מילים. עברית עיתונאית שוטפת, פסקאות קצרות, גוף שלישי בלבד)\n\n🔖 *META תיאור*  \n(140–150 תווים, בעברית, כולל מילת מפתח מרכזית)\n________\n\n━━━━━━━━━━━━━━\n❻ FULL REFERENCE ARTICLES  – 5 COMPLETE TEXTS (style guide)\n━━━━━━━━━━━━━━\n[כתבה 1 – נתוני גיוס צה״ל]  \nכותרת: יותר מחי״ר ומג״ב: זה החיל המבוקש ביותר בצה״ל  \nכותרת משנה: ביקוש שיא ליחידות קרביות בגיוס מרץ–אפריל: שריון 115 %, הגנת הגבולות 113 %, הנדסה קרבית 110 %; לראשונה – פיילוט לוחמות ביחידה 504  \nגוף:  \nצה״ל פרסם היום (רביעי) את נתוני הגיוס למחזור מרץ–אפריל… *(הטקסט המלא, 190 מילים)*\n\n[כתבה 2 – תקיפת כריש בחדרה]  \nכותרת: בניגוד לשמועות: רעיית הצוללן שנהרג מתקיפת כריש בחדרה חושפת פרטים חדשים  \nכותרת משנה: שרית צח קוראת להפסיק הפצת מידע כוזב: “ברק תיעד כרישים – הו\n\n\n\n\n\n2.\nYou are a journalistic writing assistant.  \nYour job is to rewrite formal public statements into original, structured, and fully rephrased Hebrew news articles — written in a way that does not resemble or retain the tone of the original content.\n\nThis is an official press statement: \n{{ $json.message.content }}  \n\nRewrite it from scratch as a news article. Do not summarize or copy.\n\nHeadline: up to 60 characters — include subject, action, location.  \nSub-headline: up to 150 characters — summarize the core and public impact.  \nBody: 350–400 words — journalistic tone, third person only, short paragraphs, no repetition or legal language.\n\nFormatting:\n• Return the result in the exact structure below  \n• Only bold the section titles using asterisks (*)  \n• Do not bold any other part of the article  \n• Keep all labels and instructions as is\n\n________  \n🎙 דסק AI | דוברות | בינה עיתונאית מבית מעריב\n\n📰 *כותרת ראשית*  \n(עד 60 תווים)\n\n🗞 *כותרת משנה*  \n(עד 150 תווים)\n\n📄 *גוף הכתבה*  \n(350–400 מילים. עברית עיתונאית, פסקאות קצרות, גוף שלישי בלבד)\n________\n well-structured summary that highlights the main points, key arguments, and essential details from the transcription. Ensure the summary is easy to understand and suitable for generating headlines or key takeaways.\"\n\n",
+        "height": 360,
+        "width": 1660
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        -880
+      ],
+      "id": "38f586dc-588d-4aea-8bab-8b4f60469ca0",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=אתה עיתונאי ועורך חדשות מנוסה עם המשימה לייצר כתבה חדשותית איכותית, מרתקת ומקיפה מתוך הודעה לעיתונות ומידע רקע משלים שסופק לך. מטרתך לשלב את המידע משני המקורות בצורה חלקה ויצירתית, ליצירת מאמר מגובש, שלם, אינפורמטיבי ומוכן לפרסום מיידי.\n\nהקפד לעמוד בהנחיות הבאות:\n\nכותרת: מושכת, מגרה סקרנות, ברורה וכוללת מילות מפתח חשובות ל-SEO.\n\nפסקת פתיחה: תמציתית, חזקה, מסקרנת, ומסכמת את עיקרי הסיפור באופן שיגרום לקורא להמשיך לקרוא.\n\nסגנון עיתונאי: אובייקטיבי, ברור, ענייני ומרתק, תוך שימוש בשפה תקנית, קולחת ונטולת ז'רגון מקצועי או סגנון משפטי.\n\nמיזוג מידע: שלב את ההקשר הרלוונטי באופן טבעי, ללא מעברים פתאומיים או חזרות מיותרות. הוסף ציטוטים רלוונטיים, עובדות נתמכות ודוגמאות ככל האפשר.\n\nשלמות התוכן: ודא שהמאמר מכסה בצורה יסודית ומעמיקה את כל ההיבטים הנחוצים להבנת הנושא וההשלכות הפוטנציאליות שלו.\n\nהימנע מדעה אישית או השערות: הסתמך אך ורק על המידע שסופק לך, תוך שמירה על אובייקטיביות ודיוק עובדות מוחלט.\n\n### הודעה לעיתונות:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\n### הקשר רלוונטי נוסף:\n{{ $json.message.content }}\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        4360,
+        -980
+      ],
+      "id": "25b0b905-ec04-4571-b497-871bdeab3cfe",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        4020,
+        -700
+      ],
+      "id": "e960c664-07ce-4ef8-ac81-5e17467a0656",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Generate Article Prompt\n\nאתה עיתונאי ועורך חדשות מנוסה עם המשימה לייצר כתבה חדשותית איכותית, מרתקת ומקיפה מתוך הודעה לעיתונות ומידע רקע משלים שסופק לך. מטרתך לשלב את המידע משני המקורות בצורה חלקה ויצירתית, ליצירת מאמר מגובש, שלם, אינפורמטיבי ומוכן לפרסום מיידי.\n\nהקפד לעמוד בהנחיות הבאות:\n\nכותרת: מושכת, מגרה סקרנות, ברורה וכוללת מילות מפתח חשובות ל-SEO.\n\nפסקת פתיחה: תמציתית, חזקה, מסקרנת, ומסכמת את עיקרי הסיפור באופן שיגרום לקורא להמשיך לקרוא.\n\nסגנון עיתונאי: אובייקטיבי, ברור, ענייני ומרתק, תוך שימוש בשפה תקנית, קולחת ונטולת ז'רגון מקצועי או סגנון משפטי.\n\nמיזוג מידע: שלב את ההקשר הרלוונטי באופן טבעי, ללא מעברים פתאומיים או חזרות מיותרות. הוסף ציטוטים רלוונטיים, עובדות נתמכות ודוגמאות ככל האפשר.\n\nשלמות התוכן: ודא שהמאמר מכסה בצורה יסודית ומעמיקה את כל ההיבטים הנחוצים להבנת הנושא וההשלכות הפוטנציאליות שלו.\n\nהימנע מדעה אישית או השערות: הסתמך אך ורק על המידע שסופק לך, תוך שמירה על אובייקטיביות ודיוק עובדות מוחלט.\n\n### הודעה לעיתונות:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\n### הקשר רלוונטי נוסף:\n{{ $json.message.content }}\n\n\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\nYou are an experienced journalist and news editor tasked with producing a high-quality, engaging, and comprehensive news story from a press release and the additonal relevant context. Your goal is to seamlessly and creatively integrate the information from both information to create a cohesive, complete, informative, and ready-to-publish article.\n\nBe sure to follow these guidelines:\n\nTitle: Catchy, intriguing, clear, and includes important SEO keywords.\n\nOpening paragraph: Concise, strong, intriguing, and summarizes the main points of the story in a way that will make the reader keep reading.\n\nJournalistic style: Objective, clear, to the point, and engaging, using standard, fluent language that is free of professional jargon or legalese.\n\nIntegration of information: Integrate relevant context naturally, without abrupt transitions or unnecessary repetition. Add relevant quotes, supporting facts, and examples whenever possible.\n\nContent Integrity: Make sure the article thoroughly and in-depth covers all aspects necessary to understand the topic and its potential implications.\n\nAvoid personal opinion or speculation: Rely solely on the information provided to you, maintaining complete objectivity and factual accuracy.\n\n### Press Release:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\n### Additional Relevant Context:\n{{ $json.body.website_content }}\n\n\n\n2.\n\nYou are a professional journalist tasked with creating a comprehensive, engaging, and ready-to-publish news article based solely on the given press statement. Use the provided background information only briefly (maximum 1-2 short sentences) to succinctly explain why the press statement was issued.\n\nKey guidelines to strictly follow:\n\nMain focus: The press statement (new information).\n\nBackground: Mention briefly only for context.\n\nDo not expand upon or copy details from the background.\n\nDo not retell the events from the background.\n\nHere is the information you must use:\n\nPress Statement:\n{{ $('Integration Hook1').item.json.body.press_release_text }}\n\nBackground:\n{{ $json.body.website_content }}\n\n\n3.\n\nGPT Prompt for News Article Generation:\nTask:\nGenerate a high-quality, engaging, informative, and ready-to-publish news article centered primarily around the provided press statement. Use the provided background information only briefly (maximum 1–2 short sentences) to explain the context or the triggering situation for the press release.\n\nImportant Rules:\n\nFocus primarily on the press statement; it contains the new and central information.\n\nUse the background solely to give minimal context to readers about why the press statement was issued.\n\nDo NOT copy, expand, or retell details from the background.\n\nEnsure the article is cohesive, concise, clear, and ready-to-publish.\n\nExample of correct approach:\n\nPress statement: \"Israeli Police: Operations have returned to normal.\"\n\nBackground: \"Yesterday, police forces staged protests over working conditions.\"\n\nCorrect:\n\"Following recent protests, the Israeli Police announced today that operations have returned to normal.\"\n\nIncorrect:\nAny detailed retelling or expanded explanation of the protests themselves.\n\nNow, please follow the above structure precisely.\n\nHere is your content:\n\nPress Statement:\n[Insert press statement clearly here.]\n\nBackground:\n[Insert brief background clearly here.]\n\n",
+        "height": 1740,
+        "width": 820
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6900,
+        -880
+      ],
+      "id": "182e7361-bf37-48a3-9277-2f7d7d6ad4e9",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "# Create Article from Spokesperson's message : \n",
+        "height": 340,
+        "width": 1560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -880
+      ],
+      "id": "5bb461c4-bab7-4961-8e81-634588eb4807",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-spokeperson-article",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2440,
+        -760
+      ],
+      "id": "e10e0b87-9b63-45cf-afb0-2c782904e6e1",
+      "name": "Integration Hook",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/custom_fields/{{$vars.blended_article_field_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "value",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        -760
+      ],
+      "id": "ab3b180d-65ce-4eda-b292-78f44b74c338",
+      "name": "Send Blended Article2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://newapp.connectop.co.il/api/users/{{ $vars.user_id }}/send/{{$vars.show_integrate_article_flow_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        -760
+      ],
+      "id": "d8e4be20-b8ff-45a4-a940-fee89e8fe69e",
+      "name": "Show Integrate Article2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "0712gxEaFpc0YtKb",
+          "name": "ConnectTop API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a journalistic writing assistant.  \nYour job is to write formal public statements into original, structured, and fully rephrased Hebrew news articles — written in a way that does not resemble or retain the tone of the original content.\n\nThis is the spokeperson's message: \n{{ $json.body.spokeperson_message }}\n\nWrite it from scratch as a news article. Do not summarize or copy.\n\nHeadline: up to 60 characters — include subject, action, location.  \nSub-headline: up to 150 characters — summarize the core and public impact.  \nBody: 350–400 words — journalistic tone, third person only, short paragraphs, no repetition or legal language.\n\nFormatting:\n• Return the result in the exact structure below  \n• Only bold the section titles using asterisks (*)  \n• Do not bold any other part of the article  \n• Keep all labels and instructions as is\n\n________  \n🎙 דסק AI | דוברות | בינה עיתונאית מבית מעריב\n\n📰 *כותרת ראשית*  \n(עד 60 תווים)\n\n🗞 *כותרת משנה*  \n(עד 150 תווים)\n\n📄 *גוף הכתבה*  \n(350–400 מילים. עברית עיתונאית, פסקאות קצרות, גוף שלישי בלבד)\n________\n well-structured summary that highlights the main points, key arguments, and essential details from the transcription. Ensure the summary is easy to understand and suitable for generating headlines or key takeaways.\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2740,
+        -760
+      ],
+      "id": "8a63f8cf-0579-4623-9640-9faa7293b269",
+      "name": "Restyle Article1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3080,
+        -380
+      ],
+      "id": "975fbd41-f213-4b0d-b7f1-bc38f0a92457",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-website-content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2380,
+        1260
+      ],
+      "id": "4a29fc7b-1295-4fe7-aa18-695c15777d2c",
+      "name": "Scrapping Hook1",
+      "webhookId": "7d0c7c83-fa93-45b9-bffb-6ee70a06a0c1"
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "body",
+              "cssSelector": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "36563d51-aa72-4899-8905-415d6fe0d72b",
+      "name": "Cut out the body2",
+      "type": "n8n-nodes-base.htmlExtract",
+      "position": [
+        2740,
+        1260
+      ],
+      "typeVersion": 1,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($input.item.json.body){\n\n$input.item.json.content = $input.item.json.body.replaceAll('/^\\s+|\\s+$/g', '').replace('/(\\r\\n|\\n|\\r)/gm', \"\").replace(/\\s+/g, ' ')\n\n  $input.item.json.contentShort = $input.item.json.content.slice(0, 10000)\n}\n\nreturn $input.item"
+      },
+      "id": "cd9c6fe4-e312-4222-9161-0363e36f16de",
+      "name": "Clean Content2",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2980,
+        1260
+      ],
+      "executeOnce": false,
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content-extraction specialist.\n\nTask: from the raw HTML/text, keep ONLY the core article (title + body).  \n• Preserve all facts, numbers, dates and direct quotes.  \n• Remove ads, sidebars, navigation links, comments, “read more” blocks and social buttons.  \n• Strip every HTML tag and any inline CSS/JS snippets.  \n• Keep quotation marks; convert <blockquote> elements to plain text wrapped in quotes.  \n• If the publish date exists only in meta tags, prepend it in brackets at the start of BODY.  \n• Normalize Unicode punctuation (long dashes, curly quotes) to standard Hebrew typography.\n\nReturn plain text in two sections:\n\n### TITLE\n<clean headline from source>\n\n### BODY\n<clean body in neutral journalistic paragraphs> \n\nhere is the raw html/text : {{ $json.contentShort }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        3300,
+        1260
+      ],
+      "id": "5d03596e-7269-4e62-bcbe-1badd9d2318f",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {
+          "maxTokens": -1,
+          "responseFormat": "text",
+          "presencePenalty": 0,
+          "temperature": 0.1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3040,
+        1400
+      ],
+      "id": "940464ac-221a-49f0-bbfa-99e26d52bc72",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "WjLOk791zGy47CB8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Scrapping Hook1').item.json.body.url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true
+            }
+          }
+        }
+      },
+      "id": "ec979d73-cc41-4f2f-80a2-00989bb97097",
+      "name": "Scrap Website1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2560,
+        1260
+      ],
+      "typeVersion": 3,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "# Extract Website Content and send it chatbot \n",
+        "height": 500,
+        "width": 1640,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        1060
+      ],
+      "id": "89a4ee8f-9a7b-4952-b18d-2d809d3ed361",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3660,
+        1260
+      ],
+      "id": "712d6771-42dd-49c6-94e6-e6bb4d5063ef",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3120,
+        -760
+      ],
+      "id": "6159771d-79f6-47a4-ae22-eb36c98c2280",
+      "name": "Respond to Webhook2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask the AI": {
+      "main": [
+        [
+          {
+            "node": "Split Out the Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content": {
+      "main": [
+        [
+          {
+            "node": "Ask the AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve URLs": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Delete Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body": {
+      "main": [
+        [
+          {
+            "node": "Clean Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split in Batches": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Request HTML Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request HTML Data": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out the Description": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Scrapping Hook": {
+      "main": [
+        [
+          {
+            "node": "Scrap Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Url": {
+      "main": [
+        [
+          {
+            "node": "Input the Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input the Url": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Website Content": {
+      "main": [
+        [
+          {
+            "node": "If English Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Website Content": {
+      "main": [
+        [
+          {
+            "node": "Send Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body1": {
+      "main": [
+        [
+          {
+            "node": "Clean Content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Init Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Relevant Context": {
+      "main": [
+        []
+      ]
+    },
+    "Generate Blended Article": {
+      "main": [
+        [
+          {
+            "node": "Send Blended Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Integrate Article Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Blended Article": {
+      "main": [
+        [
+          {
+            "node": "Show Integrate Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Integration Hook1": {
+      "main": [
+        [
+          {
+            "node": "Generate Blended Article1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Relevant Context1": {
+      "main": [
+        []
+      ]
+    },
+    "Generate Blended Article1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Blended Article1": {
+      "main": [
+        [
+          {
+            "node": "Show Integrate Article1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Article Hook": {
+      "main": [
+        [
+          {
+            "node": "Generate Blended Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If English Article": {
+      "main": [
+        [
+          {
+            "node": "Default",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Customize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customize": {
+      "main": [
+        [
+          {
+            "node": "Send Website Process Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default": {
+      "main": [
+        [
+          {
+            "node": "Send Website Process Flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restyle Article": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        []
+      ]
+    },
+    "Integration Hook": {
+      "main": [
+        [
+          {
+            "node": "Restyle Article1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Blended Article2": {
+      "main": [
+        [
+          {
+            "node": "Show Integrate Article2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restyle Article1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrapping Hook1": {
+      "main": [
+        [
+          {
+            "node": "Scrap Website1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cut out the body2": {
+      "main": [
+        [
+          {
+            "node": "Clean Content2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrap Website1": {
+      "main": [
+        [
+          {
+            "node": "Cut out the body2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2096c65c-8d44-4546-9b6d-eeff1ce2a2f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "EVqmNtr4uciaI52p",
+  "tags": []
+}

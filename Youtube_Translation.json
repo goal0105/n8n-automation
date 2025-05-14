@@ -1,0 +1,94 @@
+{
+  "name": "Youtube Translation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-youtube-translation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -20
+      ],
+      "id": "9f6a55a8-39e7-4f29-a1d2-88e83ae8710b",
+      "name": "Webhook",
+      "webhookId": "8321b524-3f5e-4874-9b4e-823a34ad2172"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://188.34.176.33/audio/translation",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "audio_url",
+              "value": "={{ $json.body.audio_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -260,
+        -20
+      ],
+      "id": "6c99e229-8bcc-48e0-9197-9fcfbf6d0092",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        -20
+      ],
+      "id": "42a07084-5551-4dc6-a315-33e31dd6053d",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c0a0c07e-d43a-45f5-879e-80ce7ca41960",
+  "meta": {
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "SdNTvAF9Ko9wAjaz",
+  "tags": []
+}

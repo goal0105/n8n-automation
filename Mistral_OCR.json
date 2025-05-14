@@ -1,0 +1,238 @@
+{
+  "name": "Mistral OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pdf-to-text",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        300,
+        60
+      ],
+      "id": "3bda0b9a-2b06-4cc6-a665-b0fb29a80810",
+      "name": "Webhook",
+      "webhookId": "a142bf68-af45-4110-bf92-f48cd6051945"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.choices[0].message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        -20
+      ],
+      "id": "1f8e73c1-aab3-4c96-96f3-269546547e13",
+      "name": "Respond to Webhook",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1eb5f18b-eb06-48df-8491-d60de75b4855",
+              "name": "url",
+              "type": "string",
+              "value": "={{ $json.body.file_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b755d8e8-e1b1-4261-8e4b-7b2f0c2db86f",
+      "name": "Document URL",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        60
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"model\": \"mistral-small-latest\",\n    \"messages\": [\n      {\n        \"role\": \"user\",\n        \"content\": [\n          {\n            \"type\": \"text\",\n            \"text\": \"להמיר לטקסט\"\n          },\n          {\n            \"type\": \"document_url\",\n            \"document_url\": \"{{ $json.url }}\"\n          }\n        ]\n      }\n    ],\n    \"document_image_limit\": 8,\n    \"document_page_limit\": 64\n}",
+        "options": {}
+      },
+      "id": "f8f6d511-14e8-411a-9ac1-e679044913eb",
+      "name": "Mistral DOC OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1020,
+        -20
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "c8XhIia54TnO3B9C",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "726f1f0f-db06-42dd-a27d-767790bf8742",
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        60
+      ],
+      "id": "c9fdde47-cc12-4eaf-a37f-9a561df70038",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"model\": \"mistral-ocr-latest\",\n    \"document\": {\n        \"type\": \"image_url\",\n        \"image_url\": \"{{ $json.url }}\"\n    }\n  }",
+        "options": {}
+      },
+      "id": "f83a4670-9fbf-483b-8672-7ec12b83e625",
+      "name": "Mistral IMG OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1020,
+        240
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "c8XhIia54TnO3B9C",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.pages[0].markdown }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        240
+      ],
+      "id": "fc18ca5d-d3be-4995-a8ab-3eee6d5bf5d5",
+      "name": "Respond to Webhook1",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Document URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Document URL": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral DOC OCR": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Mistral DOC OCR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mistral IMG OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral IMG OCR": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "75436139-55d9-4c0f-8185-35eae7a414f1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b2c39406048e29b5bd0552e184034517b5c2aaef3888a106af50103f680f265"
+  },
+  "id": "zLAZaLSURpSVocw8",
+  "tags": []
+}
